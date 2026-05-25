@@ -42,6 +42,13 @@ async function updateMetrics() {
 // ============================================
 // Filas
 // ============================================
+async function toggleQueue(name, paused) {
+  const action = paused ? 'resume' : 'pause';
+  await fetch(`/api/queues/${name}/${action}`, { method: 'POST' });
+  updateQueues();
+}
+window.toggleQueue = toggleQueue;
+
 async function updateQueues() {
   try {
     const { queues } = await fetchJson('/api/queues');
@@ -49,7 +56,13 @@ async function updateQueues() {
       .map(
         (q) => `
       <div class="queue-row">
-        <div class="name">${q.name} ${q.paused ? '<span class="pill yellow">paused</span>' : ''}</div>
+        <div class="name">
+          ${q.name}
+          ${q.paused ? '<span class="pill yellow">paused</span>' : ''}
+          <button class="btn" onclick="toggleQueue('${q.name}', ${q.paused})">
+            ${q.paused ? '▶ retomar' : '⏸ pausar'}
+          </button>
+        </div>
         <div class="pills">
           <span class="pill yellow">wait: ${q.waiting}</span>
           <span class="pill cyan">active: ${q.active}</span>

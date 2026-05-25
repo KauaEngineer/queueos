@@ -6,12 +6,22 @@ import 'dotenv/config';
 import { allQueues } from '../config/queues.js';
 import { prisma } from '../config/prisma.js';
 import { QUEUE_NAMES } from '../jobs/types.js';
+import { basicAuth } from './_auth.js';
+import { checkAndAlert } from './_alerts.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = Number(process.env.DASHBOARD_PORT ?? 3001);
+const SECRET = process.env.DASHBOARD_SECRET ?? 'dev-secret-trocar-em-prod';
 
 app.use(express.json());
+
+// Auth aplicada a tudo, exceto /api/health (pra monitoring poder pingar)
+app.use((req, res, next) => {
+  if (req.path === '/api/health') return next();
+  return basicAuth(SECRET)(req, res, next);
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ============================================
@@ -112,9 +122,30 @@ app.get('/api/throughput', async (_req, res) => {
 });
 
 // ============================================
-// Healthcheck
+// POST /api/queues/:name/pause - pausa fila
+// POST /api/queues/:name/resume - retoma fila
+// ============================================
+app.post('/api/queues/:name/pause', async (req, res) => {
+  const queue = allQueues.find((q) => q.name === req.params.name);
+  if (!queue) return res.status(404).json({ error: 'fila não encontrada' });
+  await queue.pause();
+  res.json({ ok: true, name: queue.name, paused: true });
+});
+
+app.post('/api/queues/:name/resume', async (req, res) => {
+  const queue = allQueues.find((q) => q.name === req.params.name);
+  if (!queue) return res.status(404).json({ error: 'fila não encontrada' });
+  await queue.resume();
+  res.json({ ok: true, name: queue.name, paused: false });
+});
+
+// ============================================
+// Healthcheck (sem auth)
 // ============================================
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
+
+// Checa alertas a cada 30s em background
+setInterval(() => void checkAndAlert(), 30_000);
 
 function rnd(min: number, max: number) {
   return Math.round((Math.random() * (max - min) + min) * 10) / 10;

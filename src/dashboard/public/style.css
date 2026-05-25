@@ -145,6 +145,26 @@ body {
   color: var(--cyan);
   margin-bottom: 8px;
   font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn {
+  background: transparent;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  margin-left: auto;
+  transition: all 0.15s;
+}
+.btn:hover {
+  background: var(--cyan);
+  color: var(--bg);
 }
 
 .queue-row .pills {

@@ -53,9 +53,9 @@ npm run producer:test    # enfileira 4 jobs pra testar
 docker compose up -d --build
 
 # Acessar:
-#   Dashboard: http://localhost:3001
-#   Postgres:  localhost:5432
-#   Redis:     localhost:6379
+#   Dashboard: http://localhost:3001  (login: admin / dev-secret-trocar-em-prod)
+#   Postgres:  localhost:5434         (porta alternativa pra evitar conflito com Postgres local)
+#   Redis:     localhost:6381         (porta alternativa pra evitar conflito com Redis local)
 
 # Logs:
 docker compose logs -f workers

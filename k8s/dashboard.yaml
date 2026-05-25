@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: queueos-dashboard
+  namespace: queueos
+  labels:
+    app: queueos
+    component: dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: queueos, component: dashboard }
+  template:
+    metadata:
+      labels: { app: queueos, component: dashboard }
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3001"
+        prometheus.io/path: "/metrics"
+    spec:
+      initContainers:
+        - name: migrate
+          image: queueos:latest
+          imagePullPolicy: IfNotPresent
+          command: ["npx", "prisma", "migrate", "deploy"]
+          envFrom:
+            - configMapRef: { name: queueos-config }
+            - secretRef: { name: queueos-secrets }
+      containers:
+        - name: dashboard
+          image: queueos:latest
+          imagePullPolicy: IfNotPresent
+          command: ["node", "dist/dashboard/server.js"]
+          ports:
+            - containerPort: 3001
+              name: http
+          envFrom:
+            - configMapRef: { name: queueos-config }
+            - secretRef: { name: queueos-secrets }
+          resources:
+            requests: { memory: "128Mi", cpu: "100m" }
+            limits: { memory: "256Mi", cpu: "500m" }
+          livenessProbe:
+            httpGet: { path: /api/health, port: 3001 }
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet: { path: /api/health, port: 3001 }
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: queueos-dashboard
+  namespace: queueos
+spec:
+  selector: { app: queueos, component: dashboard }
+  ports:
+    - port: 80
+      targetPort: 3001
+      name: http
+  type: ClusterIP
+---
+# Acesse externamente via Ingress ou kubectl port-forward
+# kubectl -n queueos port-forward svc/queueos-dashboard 3001:80

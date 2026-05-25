@@ -1,0 +1,88 @@
+# QueueOS — Stack completo pra dev
+# Roda: redis + postgres + workers + dashboard
+# Uso: docker compose up -d
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: queueos-redis-compose
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: queueos-pg-compose
+    environment:
+      POSTGRES_USER: queueos
+      POSTGRES_PASSWORD: queueos
+      POSTGRES_DB: queueos
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "queueos"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # Migrations rodam uma vez e saem
+  migrate:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://queueos:queueos@postgres:5432/queueos?schema=public"
+    command: ["npx", "prisma", "migrate", "deploy"]
+    restart: "no"
+
+  workers:
+    build: .
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DATABASE_URL: "postgresql://queueos:queueos@postgres:5432/queueos?schema=public"
+      NODE_ENV: production
+    command: ["node", "dist/workers/index.js"]
+    restart: unless-stopped
+    deploy:
+      replicas: 2
+
+  dashboard:
+    build: .
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DATABASE_URL: "postgresql://queueos:queueos@postgres:5432/queueos?schema=public"
+      DASHBOARD_PORT: 3001
+      DASHBOARD_SECRET: ${DASHBOARD_SECRET:-dev-secret-trocar-em-prod}
+      NODE_ENV: production
+    ports:
+      - "3001:3001"
+    command: ["node", "dist/dashboard/server.js"]
+    restart: unless-stopped
+
+volumes:
+  pg_data:

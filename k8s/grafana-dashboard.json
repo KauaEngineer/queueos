@@ -1,0 +1,55 @@
+{
+  "title": "QueueOS Overview",
+  "schemaVersion": 39,
+  "tags": ["queueos", "bullmq"],
+  "timezone": "browser",
+  "refresh": "10s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Jobs por estado (todas as filas)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        { "expr": "sum by (state) (queueos_jobs)", "refId": "A" }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Throughput (completed)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        { "expr": "rate(queueos_logs_total{status=\"completed\"}[1m])", "refId": "A" }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Failed total",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 8 },
+      "targets": [
+        { "expr": "queueos_logs_total{status=\"failed\"}", "refId": "A" }
+      ],
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": 0 }, { "color": "red", "value": 10 }] } } }
+    },
+    {
+      "id": 4,
+      "title": "Avg duration (ms)",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 8 },
+      "targets": [
+        { "expr": "queueos_avg_duration_ms", "refId": "A" }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Wait queue por fila",
+      "type": "bargauge",
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        { "expr": "queueos_jobs{state=\"wait\"}", "legendFormat": "{{queue}}", "refId": "A" }
+      ]
+    }
+  ]
+}

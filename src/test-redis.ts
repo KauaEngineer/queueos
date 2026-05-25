@@ -10,7 +10,7 @@ async function main() {
   console.log(`[get] valor lido: "${valor}"`);
 
   const info = await redis.info('server');
-  const versao = info.split('\n').find((l) => l.startsWith('redis_version'));
+  const versao = info.split('\n').find((l: string) => l.startsWith('redis_version'));
   console.log(`[info] ${versao?.trim()}`);
 
   await redis.del('queueos:teste');

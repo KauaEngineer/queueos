@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: queueos-workers
+  namespace: queueos
+  labels:
+    app: queueos
+    component: workers
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: queueos, component: workers }
+  template:
+    metadata:
+      labels: { app: queueos, component: workers }
+    spec:
+      containers:
+        - name: workers
+          image: queueos:latest # substituir pelo registry: ghcr.io/SEU_USER/queueos:tag
+          imagePullPolicy: IfNotPresent
+          command: ["node", "dist/workers/index.js"]
+          envFrom:
+            - configMapRef: { name: queueos-config }
+            - secretRef: { name: queueos-secrets }
+          resources:
+            requests: { memory: "256Mi", cpu: "200m" }
+            limits: { memory: "512Mi", cpu: "1000m" }
+          # Workers não têm porta HTTP; usar liveness por process check seria via exec
+---
+# HPA — escala workers conforme número de jobs em "wait" no Redis
+# Requer prometheus-adapter ou KEDA pra ler métrica custom queueos_jobs{state="wait"}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: queueos-workers-hpa
+  namespace: queueos
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: queueos-workers
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    # Fallback: usa CPU. Substitua por métrica custom em produção:
+    #   - type: Object
+    #     object:
+    #       metric: { name: queueos_jobs_wait }
+    #       describedObject: { apiVersion: v1, kind: Service, name: queueos-dashboard }
+    #       target: { type: Value, value: "50" }
+    - type: Resource
+      resource:
+        name: cpu
+        target: { type: Utilization, averageUtilization: 70 }

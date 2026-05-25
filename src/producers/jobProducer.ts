@@ -20,8 +20,8 @@ type EnqueueOpts = {
 };
 
 /** Acopla tenantId em job.data se vier nas opts. */
-function withTenant<T>(data: T, tenantId?: string): T & { tenantId?: string } {
-  return tenantId ? { ...data, tenantId } : data;
+function withTenant<T extends object>(data: T, tenantId?: string): T & { tenantId?: string } {
+  return tenantId ? { ...data, tenantId } : (data as T & { tenantId?: string });
 }
 
 function pickOpts(opts?: EnqueueOpts) {

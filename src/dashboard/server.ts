@@ -10,6 +10,7 @@ import { basicAuth } from './_auth.js';
 import { checkAndAlert } from './_alerts.js';
 import { startSnapshotScheduler } from '../snapshots/queueSnapshot.js';
 import { tenantMiddleware } from './_tenant.js';
+import { buildPrometheusMetrics } from './_prometheus.js';
 import {
   enqueueEmail,
   enqueueReport,
@@ -24,9 +25,9 @@ const SECRET = process.env.DASHBOARD_SECRET ?? 'dev-secret-trocar-em-prod';
 
 app.use(express.json());
 
-// Auth aplicada a tudo, exceto /api/health (pra monitoring poder pingar)
+// Auth aplicada a tudo, exceto /api/health e /metrics (pra Prometheus scrape)
 app.use((req, res, next) => {
-  if (req.path === '/api/health') return next();
+  if (req.path === '/api/health' || req.path === '/metrics') return next();
   return basicAuth(SECRET)(req, res, next);
 });
 
@@ -293,6 +294,18 @@ app.post('/api/queues/:name/resume', async (req, res) => {
 // Healthcheck (sem auth)
 // ============================================
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
+
+// ============================================
+// Prometheus metrics (sem auth - scrape interno)
+// ============================================
+app.get('/metrics', async (_req, res) => {
+  try {
+    const body = await buildPrometheusMetrics();
+    res.type('text/plain; version=0.0.4').send(body);
+  } catch (err) {
+    res.status(500).type('text/plain').send(`# erro: ${(err as Error).message}`);
+  }
+});
 
 // Checa alertas a cada 30s em background
 setInterval(() => void checkAndAlert(), 30_000);

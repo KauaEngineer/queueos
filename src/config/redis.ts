@@ -1,4 +1,4 @@
-import Redis from 'ioredis';
+import { Redis } from 'ioredis';
 import 'dotenv/config';
 
 const host = process.env.REDIS_HOST ?? 'localhost';
@@ -20,6 +20,6 @@ redis.on('connect', () => {
   console.log(`[redis] conectado em ${host}:${port} (db=${db})`);
 });
 
-redis.on('error', (err) => {
+redis.on('error', (err: Error) => {
   console.error('[redis] erro:', err.message);
 });

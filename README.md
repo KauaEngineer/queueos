@@ -2,6 +2,12 @@
 
 > Sistema de filas e jobs assíncronos com Node.js + Redis + BullMQ + TypeScript + Prisma + PostgreSQL + dashboard em tempo real.
 
+🚀 **Live demo:** https://queueos-owj8.onrender.com (acesso público, sem login)
+📊 Prometheus metrics: https://queueos-owj8.onrender.com/metrics
+
+> Hospedado em **Render** (free tier, dorme após 15min de inatividade — primeira request acorda em ~30s), **PostgreSQL no Neon**, **Redis no Upstash**.
+> Para reativar HTTP Basic Auth em dev local, exporte `AUTH_ENABLED=true` antes de subir o dashboard.
+
 Sistema completo de processamento assíncrono para desacoplar tarefas pesadas (envio de emails, geração de PDFs, processamento de imagens, notificações) do fluxo principal da aplicação. Inclui dashboard web em tempo real, multi-tenancy, jobs recorrentes (cron), alertas via webhook, exportação CSV, métricas Prometheus e manifestos Kubernetes prontos.
 
 ## Stack

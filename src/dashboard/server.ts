@@ -27,20 +27,25 @@ app.use(express.json());
 
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
+// Em produção (demo pública pra portfólio) tudo é público.
+// Em dev local, basta exportar AUTH_ENABLED=true pra reativar HTTP Basic Auth.
+const AUTH_ENABLED = process.env.AUTH_ENABLED === 'true';
+
 // Rotas públicas (landing, assets, health, metrics) — sem auth
 app.get('/', (_req, res) => res.sendFile(path.join(PUBLIC_DIR, 'index.html')));
 app.get('/style.css', (_req, res) => res.sendFile(path.join(PUBLIC_DIR, 'style.css')));
 app.get('/app.js', (_req, res) => res.sendFile(path.join(PUBLIC_DIR, 'app.js')));
 
-// Dashboard e API exigem auth (exceto /api/health e /metrics)
-app.use((req, res, next) => {
-  if (req.path === '/api/health' || req.path === '/metrics') return next();
-  return basicAuth(SECRET)(req, res, next);
-});
+if (AUTH_ENABLED) {
+  app.use((req, res, next) => {
+    if (req.path === '/api/health' || req.path === '/metrics') return next();
+    return basicAuth(SECRET)(req, res, next);
+  });
+}
 
 app.use(tenantMiddleware);
 
-// Dashboard SPA em /dashboard (depois do auth)
+// Dashboard SPA em /dashboard
 app.get('/dashboard', (_req, res) => res.sendFile(path.join(PUBLIC_DIR, 'dashboard.html')));
 
 // ============================================

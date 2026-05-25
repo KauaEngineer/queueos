@@ -8,7 +8,7 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">QUEUE<span>OS</span></div>
+    <div class="brand"><a href="/" style="color:inherit;text-decoration:none;">QUEUE<span>OS</span></a></div>
     <div class="subtitle">Async Queue &amp; Job Processing</div>
     <div class="tenant-box">
       <label for="tenant-input">tenant:</label>
@@ -16,6 +16,11 @@
     </div>
     <div class="status" id="status">● online</div>
   </header>
+
+  <div style="background:rgba(34,211,238,0.08);border-bottom:1px solid var(--border);padding:10px 32px;text-align:center;font-size:12px;color:var(--muted);">
+    📢 Public demo — feel free to pause queues, schedule cron jobs and explore.
+    Source: <a href="https://github.com/KauaEngineer/queueos" target="_blank" style="color:var(--cyan);">github.com/KauaEngineer/queueos</a>
+  </div>
 
   <main class="grid">
     <!-- Cards -->

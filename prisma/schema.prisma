@@ -1,0 +1,63 @@
+// QueueOS — Prisma schema
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum JobStatus {
+  completed
+  failed
+}
+
+/// Log persistente de cada job processado (completed ou failed).
+model JobLog {
+  id          String    @id @default(uuid())
+  queueName   String    @map("queue_name")
+  jobId       String    @map("job_id")
+  jobName     String    @map("job_name")
+  status      JobStatus
+  durationMs  Int       @map("duration_ms")
+  attempts    Int       @default(1)
+  result      Json?
+  error       String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@index([queueName, createdAt(sort: Desc)])
+  @@index([status, createdAt(sort: Desc)])
+  @@map("job_logs")
+}
+
+/// Snapshot periódico do estado de um worker (Sprint 7 vai usar).
+model WorkerSnapshot {
+  id            String   @id @default(uuid())
+  workerName    String   @map("worker_name")
+  cpuPercent    Float    @map("cpu_percent")
+  memoryMb      Float    @map("memory_mb")
+  currentJobId  String?  @map("current_job_id")
+  timestamp     DateTime @default(now())
+
+  @@index([workerName, timestamp(sort: Desc)])
+  @@map("worker_snapshots")
+}
+
+/// Snapshot agregado de uma fila a cada minuto (Sprint 7).
+model QueueSnapshot {
+  id          String   @id @default(uuid())
+  queueName   String   @map("queue_name")
+  waiting     Int
+  active      Int
+  completed   Int
+  failed      Int
+  delayed     Int
+  timestamp   DateTime @default(now())
+
+  @@index([queueName, timestamp(sort: Desc)])
+  @@map("queue_snapshots")
+}

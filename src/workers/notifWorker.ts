@@ -2,6 +2,7 @@ import { Worker, type Job } from 'bullmq';
 import { redisConnection } from '../config/redis.js';
 import { QUEUE_NAMES, type NotificationJobData } from '../jobs/types.js';
 import { log } from './_logger.js';
+import { persistCompleted, persistFailed } from './_persist.js';
 
 const WORKER = 'notifications';
 
@@ -29,8 +30,10 @@ export const notifWorker = new Worker<NotificationJobData>(
 
 notifWorker.on('completed', (job, result) => {
   log(WORKER, 'ok', `#${job.id} entregue -> ${result.channel}`);
+  void persistCompleted(WORKER, job, result);
 });
 
 notifWorker.on('failed', (job, err) => {
   log(WORKER, 'error', `#${job?.id} falhou (tentativa ${job?.attemptsMade}): ${err.message}`);
+  void persistFailed(WORKER, job, err);
 });

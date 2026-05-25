@@ -7,6 +7,7 @@
   "scripts": {
     "redis:test": "tsx src/test-redis.ts",
     "producer:test": "tsx src/test-producer.ts",
+    "workers:start": "tsx src/workers/index.ts",
     "test": "echo \"no tests yet\" && exit 0"
   },
   "keywords": [

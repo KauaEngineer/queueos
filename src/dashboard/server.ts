@@ -8,6 +8,7 @@ import { prisma } from '../config/prisma.js';
 import { QUEUE_NAMES } from '../jobs/types.js';
 import { basicAuth } from './_auth.js';
 import { checkAndAlert } from './_alerts.js';
+import { startSnapshotScheduler } from '../snapshots/queueSnapshot.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -122,6 +123,85 @@ app.get('/api/throughput', async (_req, res) => {
 });
 
 // ============================================
+// GET /api/metrics/history?range=1h|24h
+// Série temporal agregada por minuto (1h) ou hora (24h)
+// ============================================
+app.get('/api/metrics/history', async (req, res) => {
+  const range = (req.query.range as string) ?? '1h';
+  const hours = range === '24h' ? 24 : 1;
+  const since = new Date(Date.now() - hours * 3600 * 1000);
+
+  const logs = await prisma.jobLog.findMany({
+    where: { createdAt: { gte: since } },
+    select: { createdAt: true, status: true, queueName: true },
+    orderBy: { createdAt: 'asc' },
+  });
+
+  const bucketMs = hours === 24 ? 3600 * 1000 : 60 * 1000;
+  const bucketCount = hours === 24 ? 24 : 60;
+  const buckets = Array.from({ length: bucketCount }, () => ({
+    completed: 0,
+    failed: 0,
+    t: 0,
+  }));
+
+  const now = Date.now();
+  for (const log of logs) {
+    const ageMs = now - log.createdAt.getTime();
+    const idx = bucketCount - 1 - Math.floor(ageMs / bucketMs);
+    if (idx >= 0 && idx < bucketCount) {
+      if (log.status === 'completed') buckets[idx].completed++;
+      else buckets[idx].failed++;
+    }
+  }
+  for (let i = 0; i < bucketCount; i++) {
+    buckets[i].t = now - (bucketCount - 1 - i) * bucketMs;
+  }
+
+  res.json({ range, bucketMs, buckets });
+});
+
+// ============================================
+// GET /api/logs/export?queue=email-sender&status=failed
+// Baixa CSV com os logs filtrados
+// ============================================
+app.get('/api/logs/export', async (req, res) => {
+  const queue = req.query.queue as string | undefined;
+  const status = req.query.status as 'completed' | 'failed' | undefined;
+
+  const logs = await prisma.jobLog.findMany({
+    where: {
+      ...(queue ? { queueName: queue } : {}),
+      ...(status ? { status } : {}),
+    },
+    orderBy: { createdAt: 'desc' },
+    take: 10_000,
+  });
+
+  const header = 'id,queue_name,job_id,job_name,status,duration_ms,attempts,error,created_at\n';
+  const rows = logs
+    .map((l) =>
+      [
+        l.id,
+        l.queueName,
+        l.jobId,
+        l.jobName,
+        l.status,
+        l.durationMs,
+        l.attempts,
+        `"${(l.error ?? '').replace(/"/g, '""')}"`,
+        l.createdAt.toISOString(),
+      ].join(','),
+    )
+    .join('\n');
+
+  const fname = `queueos-logs-${new Date().toISOString().slice(0, 10)}.csv`;
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', `attachment; filename="${fname}"`);
+  res.send(header + rows);
+});
+
+// ============================================
 // POST /api/queues/:name/pause - pausa fila
 // POST /api/queues/:name/resume - retoma fila
 // ============================================
@@ -146,6 +226,9 @@ app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
 // Checa alertas a cada 30s em background
 setInterval(() => void checkAndAlert(), 30_000);
+
+// Snapshot das filas a cada 60s pra histórico
+startSnapshotScheduler(60_000);
 
 function rnd(min: number, max: number) {
   return Math.round((Math.random() * (max - min) + min) * 10) / 10;

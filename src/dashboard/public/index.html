@@ -44,6 +44,21 @@
       <svg id="chart" viewBox="0 0 600 160" preserveAspectRatio="none"></svg>
     </section>
 
+    <!-- Histórico (1h / 24h) -->
+    <section class="panel">
+      <h2>
+        Histórico
+        <span style="float:right;display:inline-flex;gap:6px;">
+          <button class="btn" id="range-1h">1h</button>
+          <button class="btn" id="range-24h">24h</button>
+        </span>
+      </h2>
+      <svg id="history-chart" viewBox="0 0 600 160" preserveAspectRatio="none"></svg>
+      <div style="margin-top:12px;">
+        <a class="btn" href="/api/logs/export" download>⬇ Exportar todos os logs (CSV)</a>
+      </div>
+    </section>
+
     <!-- Queues -->
     <section class="panel">
       <h2>Filas</h2>

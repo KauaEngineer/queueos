@@ -179,13 +179,61 @@ async function updateChart() {
 }
 
 // ============================================
+// Histórico chart (1h ou 24h)
+// ============================================
+let currentRange = '1h';
+
+async function updateHistory() {
+  try {
+    const { range, buckets } = await fetchJson(`/api/metrics/history?range=${currentRange}`);
+    const max = Math.max(...buckets.map((b) => b.completed + b.failed), 1);
+    const w = 600;
+    const h = 160;
+    const stepX = w / buckets.length;
+
+    const bars = buckets
+      .map((b, i) => {
+        const total = b.completed + b.failed;
+        const x = i * stepX;
+        const barH = (total / max) * (h - 30);
+        const y = h - barH - 20;
+        const failH = (b.failed / max) * (h - 30);
+        const failY = h - failH - 20;
+        return `
+          <rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(stepX - 1).toFixed(1)}" height="${barH.toFixed(1)}" fill="rgba(74,222,128,0.4)" />
+          <rect x="${x.toFixed(1)}" y="${failY.toFixed(1)}" width="${(stepX - 1).toFixed(1)}" height="${failH.toFixed(1)}" fill="rgba(248,113,113,0.7)" />
+        `;
+      })
+      .join('');
+
+    const label = range === '24h' ? 'últimas 24h (por hora)' : 'última hora (por minuto)';
+    document.getElementById('history-chart').innerHTML = `
+      ${bars}
+      <text x="8" y="14" fill="var(--muted)" font-size="10" font-family="monospace">${label} • max: ${max}</text>
+      <text x="${w - 8}" y="14" fill="var(--green)" font-size="10" font-family="monospace" text-anchor="end">■ completed  ■ failed</text>
+    `;
+  } catch (e) {
+    console.error('history', e);
+  }
+}
+
+document.getElementById('range-1h').addEventListener('click', () => {
+  currentRange = '1h';
+  updateHistory();
+});
+document.getElementById('range-24h').addEventListener('click', () => {
+  currentRange = '24h';
+  updateHistory();
+});
+
+// ============================================
 // Loops de polling
 // ============================================
 async function tickFast() {
   await Promise.all([updateMetrics(), updateQueues(), updateJobs(), updateChart()]);
 }
 async function tickSlow() {
-  await updateWorkers();
+  await Promise.all([updateWorkers(), updateHistory()]);
 }
 
 tickFast();

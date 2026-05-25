@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
+    "redis:test": "tsx src/test-redis.ts",
     "test": "echo \"no tests yet\" && exit 0"
   },
   "keywords": [
@@ -20,5 +21,9 @@
     "@types/node": "^25.9.1",
     "tsx": "^4.22.3",
     "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "ioredis": "^5.10.1"
   }
 }

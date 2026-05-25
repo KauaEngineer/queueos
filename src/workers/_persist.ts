@@ -7,6 +7,11 @@ import { log } from './_logger.js';
  * Chamados pelos listeners 'completed' e 'failed' de cada worker.
  */
 
+function getTenant(job: Job): string {
+  const t = (job.data as { tenantId?: unknown })?.tenantId;
+  return typeof t === 'string' && t.length > 0 ? t : 'default';
+}
+
 export async function persistCompleted(
   queueName: string,
   job: Job,
@@ -16,6 +21,7 @@ export async function persistCompleted(
     const durationMs = Number(job.finishedOn ?? Date.now()) - Number(job.processedOn ?? Date.now());
     await prisma.jobLog.create({
       data: {
+        tenantId: getTenant(job),
         queueName,
         jobId: String(job.id),
         jobName: job.name,
@@ -40,6 +46,7 @@ export async function persistFailed(
     const durationMs = Number(job.finishedOn ?? Date.now()) - Number(job.processedOn ?? Date.now());
     await prisma.jobLog.create({
       data: {
+        tenantId: getTenant(job),
         queueName,
         jobId: String(job.id),
         jobName: job.name,

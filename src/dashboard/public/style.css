@@ -53,6 +53,57 @@ body {
   font-weight: bold;
 }
 
+.tenant-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.tenant-box input {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--cyan);
+  padding: 4px 8px;
+  font-family: inherit;
+  font-size: 12px;
+  width: 140px;
+}
+.tenant-box input:focus {
+  outline: none;
+  border-color: var(--cyan);
+}
+
+.cron-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.cron-form select,
+.cron-form input {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text);
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 12px;
+}
+.cron-form input[type="text"] { flex: 1; min-width: 180px; }
+.cron-form select:focus, .cron-form input:focus {
+  outline: none;
+  border-color: var(--cyan);
+}
+code {
+  background: rgba(34,211,238,0.1);
+  color: var(--cyan);
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-size: 11px;
+}
+
 .grid {
   padding: 24px;
   display: grid;

@@ -19,6 +19,7 @@ enum JobStatus {
 /// Log persistente de cada job processado (completed ou failed).
 model JobLog {
   id          String    @id @default(uuid())
+  tenantId    String    @default("default") @map("tenant_id")
   queueName   String    @map("queue_name")
   jobId       String    @map("job_id")
   jobName     String    @map("job_name")
@@ -31,6 +32,7 @@ model JobLog {
 
   @@index([queueName, createdAt(sort: Desc)])
   @@index([status, createdAt(sort: Desc)])
+  @@index([tenantId, createdAt(sort: Desc)])
   @@map("job_logs")
 }
 

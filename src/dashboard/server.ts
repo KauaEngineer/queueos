@@ -9,6 +9,13 @@ import { QUEUE_NAMES } from '../jobs/types.js';
 import { basicAuth } from './_auth.js';
 import { checkAndAlert } from './_alerts.js';
 import { startSnapshotScheduler } from '../snapshots/queueSnapshot.js';
+import { tenantMiddleware } from './_tenant.js';
+import {
+  enqueueEmail,
+  enqueueReport,
+  enqueueImage,
+  enqueueNotification,
+} from '../producers/jobProducer.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -23,6 +30,7 @@ app.use((req, res, next) => {
   return basicAuth(SECRET)(req, res, next);
 });
 
+app.use(tenantMiddleware);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ============================================
@@ -52,14 +60,16 @@ app.get('/api/queues', async (_req, res) => {
 // GET /api/metrics
 // Métricas agregadas para os cards do topo
 // ============================================
-app.get('/api/metrics', async (_req, res) => {
+app.get('/api/metrics', async (req, res) => {
   const oneMinAgo = new Date(Date.now() - 60_000);
+  const tenant = req.tenantId;
+  const tenantFilter = tenant === 'default' ? {} : { tenantId: tenant };
 
   const [recentCount, totalCompleted, totalFailed, avgDuration] = await Promise.all([
-    prisma.jobLog.count({ where: { createdAt: { gte: oneMinAgo } } }),
-    prisma.jobLog.count({ where: { status: 'completed' } }),
-    prisma.jobLog.count({ where: { status: 'failed' } }),
-    prisma.jobLog.aggregate({ _avg: { durationMs: true } }),
+    prisma.jobLog.count({ where: { ...tenantFilter, createdAt: { gte: oneMinAgo } } }),
+    prisma.jobLog.count({ where: { ...tenantFilter, status: 'completed' } }),
+    prisma.jobLog.count({ where: { ...tenantFilter, status: 'failed' } }),
+    prisma.jobLog.aggregate({ where: tenantFilter, _avg: { durationMs: true } }),
   ]);
 
   const total = totalCompleted + totalFailed;
@@ -78,12 +88,15 @@ app.get('/api/metrics', async (_req, res) => {
 // GET /api/jobs/recent
 // Últimos 10 jobs processados
 // ============================================
-app.get('/api/jobs/recent', async (_req, res) => {
+app.get('/api/jobs/recent', async (req, res) => {
+  const tenant = req.tenantId;
+  const tenantFilter = tenant === 'default' ? {} : { tenantId: tenant };
   const jobs = await prisma.jobLog.findMany({
+    where: tenantFilter,
     orderBy: { createdAt: 'desc' },
     take: 10,
   });
-  res.json({ jobs });
+  res.json({ jobs, tenant });
 });
 
 // ============================================
@@ -199,6 +212,63 @@ app.get('/api/logs/export', async (req, res) => {
   res.setHeader('Content-Type', 'text/csv');
   res.setHeader('Content-Disposition', `attachment; filename="${fname}"`);
   res.send(header + rows);
+});
+
+// ============================================
+// Cron jobs (repeating jobs via BullMQ)
+// ============================================
+const ENQUEUERS = {
+  'email-sender': enqueueEmail,
+  'report-gen': enqueueReport,
+  'image-proc': enqueueImage,
+  notifications: enqueueNotification,
+} as const;
+
+// GET /api/cron - lista todos os jobs recorrentes de todas as filas
+app.get('/api/cron', async (_req, res) => {
+  const all = await Promise.all(
+    allQueues.map(async (q) => {
+      const repeatables = await q.getRepeatableJobs();
+      return repeatables.map((r) => ({
+        queue: q.name,
+        key: r.key,
+        name: r.name,
+        pattern: r.pattern,
+        next: r.next,
+      }));
+    }),
+  );
+  res.json({ jobs: all.flat() });
+});
+
+// POST /api/cron { queue, pattern, payload } - agenda um job recorrente
+app.post('/api/cron', async (req, res) => {
+  const { queue, pattern, payload } = req.body ?? {};
+  if (!queue || !pattern) {
+    return res.status(400).json({ error: 'queue e pattern são obrigatórios' });
+  }
+  const fn = ENQUEUERS[queue as keyof typeof ENQUEUERS];
+  if (!fn) return res.status(400).json({ error: `queue inválida: ${queue}` });
+
+  try {
+    const job = await fn(payload ?? {}, {
+      tenantId: req.tenantId,
+      repeat: { pattern },
+    });
+    res.json({ ok: true, jobId: job.id, queue, pattern });
+  } catch (err) {
+    res.status(500).json({ error: (err as Error).message });
+  }
+});
+
+// DELETE /api/cron - body: { queue, key }
+app.delete('/api/cron', async (req, res) => {
+  const { queue, key } = req.body ?? {};
+  if (!queue || !key) return res.status(400).json({ error: 'queue e key obrigatórios' });
+  const q = allQueues.find((x) => x.name === queue);
+  if (!q) return res.status(404).json({ error: 'fila não encontrada' });
+  await q.removeRepeatableByKey(key);
+  res.json({ ok: true });
 });
 
 // ============================================

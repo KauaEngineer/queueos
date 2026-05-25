@@ -5,11 +5,73 @@ const POLL_SLOW = 10000;
 
 const $ = (id) => document.getElementById(id);
 
+// ----- Tenant atual (persistido em localStorage) -----
+let currentTenant = localStorage.getItem('queueos:tenant') || 'default';
+
+function getTenantHeaders() {
+  return { 'X-Tenant-Id': currentTenant };
+}
+
 async function fetchJson(url) {
-  const r = await fetch(url);
+  const r = await fetch(url, { headers: getTenantHeaders() });
   if (!r.ok) throw new Error(`${url} -> ${r.status}`);
   return r.json();
 }
+
+async function postJson(url, body) {
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getTenantHeaders() },
+    body: JSON.stringify(body ?? {}),
+  });
+  return r.json();
+}
+
+async function deleteJson(url, body) {
+  const r = await fetch(url, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', ...getTenantHeaders() },
+    body: JSON.stringify(body ?? {}),
+  });
+  return r.json();
+}
+
+// input de tenant
+document.addEventListener('DOMContentLoaded', () => {
+  const inp = $('tenant-input');
+  if (inp) {
+    inp.value = currentTenant;
+    inp.addEventListener('change', () => {
+      currentTenant = inp.value.trim() || 'default';
+      localStorage.setItem('queueos:tenant', currentTenant);
+      tickFast();
+      tickSlow();
+    });
+  }
+
+  const form = $('cron-form');
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const queue = $('cron-queue').value;
+      const pattern = $('cron-pattern').value;
+      const raw = $('cron-payload').value.trim();
+      let payload = {};
+      if (raw) {
+        try { payload = JSON.parse(raw); }
+        catch { alert('payload deve ser JSON válido'); return; }
+      }
+      const r = await postJson('/api/cron', { queue, pattern, payload });
+      if (r.ok) {
+        $('cron-pattern').value = '';
+        $('cron-payload').value = '';
+        updateCron();
+      } else {
+        alert('erro: ' + (r.error ?? 'desconhecido'));
+      }
+    });
+  }
+});
 
 function setStatus(ok) {
   const el = $('status');
@@ -44,10 +106,42 @@ async function updateMetrics() {
 // ============================================
 async function toggleQueue(name, paused) {
   const action = paused ? 'resume' : 'pause';
-  await fetch(`/api/queues/${name}/${action}`, { method: 'POST' });
+  await fetch(`/api/queues/${name}/${action}`, { method: 'POST', headers: getTenantHeaders() });
   updateQueues();
 }
 window.toggleQueue = toggleQueue;
+
+async function deleteCron(queue, key) {
+  if (!confirm('Remover este cron job?')) return;
+  await deleteJson('/api/cron', { queue, key });
+  updateCron();
+}
+window.deleteCron = deleteCron;
+
+async function updateCron() {
+  try {
+    const { jobs } = await fetchJson('/api/cron');
+    const body = $('cron-body');
+    if (!body) return;
+    if (jobs.length === 0) {
+      body.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:16px;">nenhum cron job agendado</td></tr>`;
+      return;
+    }
+    body.innerHTML = jobs
+      .map(
+        (j) => `
+      <tr>
+        <td>${j.queue}</td>
+        <td><code>${j.pattern ?? '—'}</code></td>
+        <td>${j.next ? new Date(j.next).toLocaleString('pt-BR') : '—'}</td>
+        <td><button class="btn" onclick="deleteCron('${j.queue}', '${j.key.replace(/'/g, "\\'")}')">🗑 remover</button></td>
+      </tr>`,
+      )
+      .join('');
+  } catch (e) {
+    console.error('cron', e);
+  }
+}
 
 async function updateQueues() {
   try {
@@ -233,7 +327,7 @@ async function tickFast() {
   await Promise.all([updateMetrics(), updateQueues(), updateJobs(), updateChart()]);
 }
 async function tickSlow() {
-  await Promise.all([updateWorkers(), updateHistory()]);
+  await Promise.all([updateWorkers(), updateHistory(), updateCron()]);
 }
 
 tickFast();

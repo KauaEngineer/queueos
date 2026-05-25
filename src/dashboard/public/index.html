@@ -10,6 +10,10 @@
   <header class="topbar">
     <div class="brand">QUEUE<span>OS</span></div>
     <div class="subtitle">Sistema de Filas e Jobs Assíncronos</div>
+    <div class="tenant-box">
+      <label for="tenant-input">tenant:</label>
+      <input id="tenant-input" type="text" value="default" maxlength="32" />
+    </div>
     <div class="status" id="status">● online</div>
   </header>
 
@@ -69,6 +73,33 @@
     <section class="panel">
       <h2>Workers</h2>
       <div id="workers" class="workers"></div>
+    </section>
+
+    <!-- Cron jobs -->
+    <section class="panel wide">
+      <h2>Cron Jobs (jobs recorrentes)</h2>
+      <form id="cron-form" class="cron-form">
+        <select id="cron-queue">
+          <option value="email-sender">email-sender</option>
+          <option value="report-gen">report-gen</option>
+          <option value="image-proc">image-proc</option>
+          <option value="notifications">notifications</option>
+        </select>
+        <input type="text" id="cron-pattern" placeholder="cron pattern ex: */5 * * * *" required />
+        <input type="text" id="cron-payload" placeholder='payload JSON ex: {"to":"a@b.com","subject":"Hi","template":"welcome"}' />
+        <button type="submit" class="btn">+ agendar</button>
+      </form>
+      <table class="jobs">
+        <thead>
+          <tr><th>Fila</th><th>Pattern</th><th>Próxima execução</th><th>Ação</th></tr>
+        </thead>
+        <tbody id="cron-body"></tbody>
+      </table>
+      <p style="color:var(--muted);font-size:11px;margin-top:8px;">
+        Exemplos: <code>*/2 * * * *</code> a cada 2min ·
+        <code>0 9 * * *</code> todo dia 9h ·
+        <code>0 0 * * 1</code> toda segunda à meia-noite
+      </p>
     </section>
 
     <!-- Recent jobs -->

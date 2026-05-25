@@ -11,29 +11,43 @@ import type {
   NotificationJobData,
 } from '../jobs/types.js';
 
-/** Adiciona um job na fila de emails. */
-export async function enqueueEmail(data: EmailJobData, opts?: { delay?: number; priority?: number }) {
-  return emailQueue.add('send-email', data, opts);
+type EnqueueOpts = {
+  delay?: number;
+  priority?: number;
+  tenantId?: string;
+  repeat?: { pattern: string }; // cron pattern, ex: "0 9 * * *"
+  jobId?: string;
+};
+
+/** Acopla tenantId em job.data se vier nas opts. */
+function withTenant<T>(data: T, tenantId?: string): T & { tenantId?: string } {
+  return tenantId ? { ...data, tenantId } : data;
 }
 
-/** Adiciona um job na fila de relatórios. */
-export async function enqueueReport(data: ReportJobData, opts?: { delay?: number; priority?: number }) {
-  return reportQueue.add('generate-report', data, opts);
+function pickOpts(opts?: EnqueueOpts) {
+  if (!opts) return undefined;
+  const { tenantId: _t, ...rest } = opts;
+  return rest;
 }
 
-/** Adiciona um job na fila de processamento de imagens. */
-export async function enqueueImage(data: ImageJobData, opts?: { delay?: number; priority?: number }) {
-  return imageQueue.add('process-image', data, opts);
+export async function enqueueEmail(data: EmailJobData, opts?: EnqueueOpts) {
+  return emailQueue.add('send-email', withTenant(data, opts?.tenantId), pickOpts(opts));
 }
 
-/** Adiciona um job na fila de notificações. */
-export async function enqueueNotification(
-  data: NotificationJobData,
-  opts?: { delay?: number; priority?: number },
-) {
-  // Prioridade automática conforme campo "priority" do payload
+export async function enqueueReport(data: ReportJobData, opts?: EnqueueOpts) {
+  return reportQueue.add('generate-report', withTenant(data, opts?.tenantId), pickOpts(opts));
+}
+
+export async function enqueueImage(data: ImageJobData, opts?: EnqueueOpts) {
+  return imageQueue.add('process-image', withTenant(data, opts?.tenantId), pickOpts(opts));
+}
+
+export async function enqueueNotification(data: NotificationJobData, opts?: EnqueueOpts) {
   const priority =
-    opts?.priority ??
-    (data.priority === 'high' ? 1 : data.priority === 'low' ? 10 : 5);
-  return notificationQueue.add('send-notification', data, { ...opts, priority });
+    opts?.priority ?? (data.priority === 'high' ? 1 : data.priority === 'low' ? 10 : 5);
+  return notificationQueue.add(
+    'send-notification',
+    withTenant(data, opts?.tenantId),
+    { ...pickOpts(opts), priority },
+  );
 }

@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "redis:test": "tsx src/test-redis.ts",
+    "producer:test": "tsx src/test-producer.ts",
     "test": "echo \"no tests yet\" && exit 0"
   },
   "keywords": [
@@ -23,6 +24,7 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
+    "bullmq": "^5.77.3",
     "dotenv": "^17.4.2",
     "ioredis": "^5.10.1"
   }

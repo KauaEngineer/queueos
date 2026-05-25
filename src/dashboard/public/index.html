@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QueueOS Dashboard</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">QUEUE<span>OS</span></div>
+    <div class="subtitle">Sistema de Filas e Jobs Assíncronos</div>
+    <div class="status" id="status">● online</div>
+  </header>
+
+  <main class="grid">
+    <!-- Cards -->
+    <section class="cards">
+      <div class="card cyan">
+        <div class="val" id="m-perMin">--</div>
+        <div class="lbl">jobs / min</div>
+      </div>
+      <div class="card green">
+        <div class="val" id="m-completed">--</div>
+        <div class="lbl">completed</div>
+      </div>
+      <div class="card yellow">
+        <div class="val" id="m-avg">--</div>
+        <div class="lbl">avg duration (ms)</div>
+      </div>
+      <div class="card red">
+        <div class="val" id="m-failed">--</div>
+        <div class="lbl">failed</div>
+      </div>
+      <div class="card purple">
+        <div class="val" id="m-success">--</div>
+        <div class="lbl">success rate (%)</div>
+      </div>
+    </section>
+
+    <!-- Throughput chart -->
+    <section class="panel">
+      <h2>Throughput — últimos 60s</h2>
+      <svg id="chart" viewBox="0 0 600 160" preserveAspectRatio="none"></svg>
+    </section>
+
+    <!-- Queues -->
+    <section class="panel">
+      <h2>Filas</h2>
+      <div id="queues" class="queues"></div>
+    </section>
+
+    <!-- Workers -->
+    <section class="panel">
+      <h2>Workers</h2>
+      <div id="workers" class="workers"></div>
+    </section>
+
+    <!-- Recent jobs -->
+    <section class="panel wide">
+      <h2>Últimos 10 jobs</h2>
+      <table class="jobs">
+        <thead>
+          <tr>
+            <th>Fila</th>
+            <th>Job ID</th>
+            <th>Status</th>
+            <th>Duração</th>
+            <th>Tentativas</th>
+            <th>Quando</th>
+          </tr>
+        </thead>
+        <tbody id="jobs-body"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    QueueOS v0.1 — atualizando a cada 2s
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

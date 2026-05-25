@@ -1,130 +1,410 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QueueOS Dashboard</title>
-  <link rel="stylesheet" href="/style.css" />
+  <title>QueueOS — Async Queue & Job Processing System</title>
+  <meta name="description" content="Async queue and job processing platform built with Node.js, Redis, BullMQ, TypeScript, Prisma and PostgreSQL. Real-time dashboard, multi-tenant, cron jobs, Prometheus metrics." />
+  <style>
+    :root {
+      --bg: #0a0e1a;
+      --panel: #0f1525;
+      --border: #1d2940;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --cyan: #22d3ee;
+      --green: #4ade80;
+      --yellow: #facc15;
+      --red: #f87171;
+      --purple: #c084fc;
+      --orange: #fb923c;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'JetBrains Mono', 'Consolas', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      background-image:
+        linear-gradient(rgba(34, 211, 238, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    a { color: var(--cyan); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      background: rgba(34,211,238,0.1);
+      color: var(--cyan);
+      padding: 1px 5px;
+      border-radius: 2px;
+      font-size: 0.9em;
+    }
+
+    /* ----- NAV ----- */
+    .nav {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(10, 14, 26, 0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .brand { font-size: 22px; font-weight: 900; letter-spacing: 2px; }
+    .brand span { color: var(--cyan); }
+    .nav-links { display: flex; gap: 24px; font-size: 13px; }
+    .nav-links a { color: var(--muted); }
+    .nav-links a:hover { color: var(--cyan); }
+    .btn-cta {
+      background: var(--cyan); color: var(--bg);
+      padding: 8px 18px; border-radius: 4px; font-weight: bold;
+      font-size: 13px;
+    }
+    .btn-cta:hover { text-decoration: none; opacity: 0.85; }
+
+    /* ----- HERO ----- */
+    .hero {
+      max-width: 1100px; margin: 0 auto;
+      padding: 80px 32px 60px;
+      text-align: center;
+    }
+    .badge-conf {
+      display: inline-block; padding: 4px 12px;
+      border: 1px solid var(--border); border-radius: 3px;
+      font-size: 10px; color: var(--muted); letter-spacing: 1.5px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: 64px; font-weight: 900; letter-spacing: 3px;
+      line-height: 1; margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--cyan); }
+    .hero .tagline {
+      font-size: 18px; color: var(--cyan); margin-bottom: 24px;
+    }
+    .hero p {
+      max-width: 720px; margin: 0 auto 32px;
+      color: var(--muted); font-size: 14px;
+    }
+    .hero-actions {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    }
+    .btn-secondary {
+      border: 1px solid var(--border); color: var(--text);
+      padding: 8px 18px; border-radius: 4px; font-size: 13px;
+    }
+    .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); text-decoration: none; }
+    .tech-badges {
+      display: flex; gap: 8px; justify-content: center;
+      margin-top: 40px; flex-wrap: wrap;
+    }
+    .tech-badges span {
+      padding: 6px 14px; border: 1px solid var(--border); border-radius: 3px;
+      font-size: 11px; color: var(--muted);
+    }
+    .tech-badges span:nth-child(1) { color: var(--cyan); border-color: var(--cyan); }
+    .tech-badges span:nth-child(2) { color: var(--green); border-color: var(--green); }
+    .tech-badges span:nth-child(3) { color: var(--purple); border-color: var(--purple); }
+    .tech-badges span:nth-child(4) { color: var(--yellow); border-color: var(--yellow); }
+    .tech-badges span:nth-child(5) { color: var(--orange); border-color: var(--orange); }
+    .tech-badges span:nth-child(6) { color: var(--red); border-color: var(--red); }
+
+    /* ----- SECTION ----- */
+    section { max-width: 1100px; margin: 0 auto; padding: 60px 32px; }
+    section h2 {
+      font-size: 13px; color: var(--cyan); letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+    section h3 {
+      font-size: 32px; font-weight: 900;
+      margin-bottom: 32px;
+    }
+
+    /* ----- TABLE ----- */
+    .compare {
+      width: 100%; border-collapse: collapse;
+      background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+      overflow: hidden;
+    }
+    .compare th, .compare td {
+      padding: 14px 20px; text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .compare th { color: var(--cyan); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    .compare tr:last-child td { border-bottom: none; }
+    .compare td:last-child { color: var(--green); }
+
+    /* ----- FEATURES GRID ----- */
+    .features {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .feat {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+      padding: 24px; position: relative; overflow: hidden;
+    }
+    .feat::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: currentColor;
+    }
+    .feat:nth-child(1) { color: var(--cyan); }
+    .feat:nth-child(2) { color: var(--green); }
+    .feat:nth-child(3) { color: var(--yellow); }
+    .feat:nth-child(4) { color: var(--purple); }
+    .feat:nth-child(5) { color: var(--red); }
+    .feat:nth-child(6) { color: var(--orange); }
+    .feat h4 {
+      font-size: 16px; margin-bottom: 8px;
+    }
+    .feat p { color: var(--muted); font-size: 13px; }
+
+    /* ----- STACK ----- */
+    .stack {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+    .stack-item {
+      background: var(--panel); border: 1px solid var(--border); border-left: 3px solid;
+      padding: 16px; border-radius: 4px;
+    }
+    .stack-item h4 { font-size: 14px; margin-bottom: 6px; }
+    .stack-item p { font-size: 12px; color: var(--muted); }
+
+    /* ----- QUEUES SHOWCASE ----- */
+    .queues-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .q-card {
+      background: var(--panel); border: 1px solid var(--border); border-top: 3px solid;
+      padding: 18px; border-radius: 4px;
+    }
+    .q-card .q-name { font-size: 16px; font-weight: bold; margin-bottom: 12px; }
+    .q-card dl { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-size: 12px; }
+    .q-card dt { color: var(--muted); }
+    .q-card dd { color: var(--text); font-weight: bold; }
+
+    /* ----- ARCHITECTURE ASCII ----- */
+    .arch {
+      background: #050811; border: 1px solid var(--border); border-radius: 6px;
+      padding: 24px; font-size: 12px; line-height: 1.6;
+      color: var(--green); overflow-x: auto;
+    }
+
+    /* ----- FOOTER ----- */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 40px;
+    }
+    footer a { color: var(--cyan); }
+
+    /* ----- RESPONSIVE ----- */
+    @media (max-width: 700px) {
+      .hero h1 { font-size: 44px; }
+      .hero { padding: 60px 20px 40px; }
+      section { padding: 40px 20px; }
+      .nav { padding: 12px 20px; }
+      .nav-links { display: none; }
+    }
+  </style>
 </head>
 <body>
-  <header class="topbar">
+
+  <!-- NAV -->
+  <nav class="nav">
     <div class="brand">QUEUE<span>OS</span></div>
-    <div class="subtitle">Sistema de Filas e Jobs Assíncronos</div>
-    <div class="tenant-box">
-      <label for="tenant-input">tenant:</label>
-      <input id="tenant-input" type="text" value="default" maxlength="32" />
+    <div class="nav-links">
+      <a href="#problem">Problem</a>
+      <a href="#features">Features</a>
+      <a href="#stack">Stack</a>
+      <a href="#queues">Queues</a>
+      <a href="https://github.com/KauaEngineer/queueos" target="_blank">GitHub ↗</a>
     </div>
-    <div class="status" id="status">● online</div>
+    <a href="/dashboard" class="btn-cta">Open Dashboard →</a>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <span class="badge-conf">v0.1 · OPEN SOURCE · MIT</span>
+    <h1>QUEUE<span>OS</span></h1>
+    <div class="tagline">Async Queue &amp; Job Processing System</div>
+    <p>
+      Offload heavy tasks (emails, PDFs, image processing, notifications) from your main app to dedicated worker pools.
+      Built on top of <b>Node.js</b>, <b>Redis</b> and <b>BullMQ</b>, with a real-time dashboard, multi-tenancy,
+      cron scheduling, Prometheus metrics and Kubernetes manifests ready to deploy.
+    </p>
+    <div class="hero-actions">
+      <a href="/dashboard" class="btn-cta">Open Dashboard →</a>
+      <a href="https://github.com/KauaEngineer/queueos" target="_blank" class="btn-secondary">View on GitHub</a>
+    </div>
+    <div class="tech-badges">
+      <span>Node.js 20</span>
+      <span>Redis 7</span>
+      <span>BullMQ 5</span>
+      <span>TypeScript 6</span>
+      <span>Prisma 6</span>
+      <span>PostgreSQL 16</span>
+    </div>
   </header>
 
-  <main class="grid">
-    <!-- Cards -->
-    <section class="cards">
-      <div class="card cyan">
-        <div class="val" id="m-perMin">--</div>
-        <div class="lbl">jobs / min</div>
+  <!-- PROBLEM / SOLUTION -->
+  <section id="problem">
+    <h2>02 · Why QueueOS</h2>
+    <h3>Problems we solve</h3>
+    <table class="compare">
+      <thead>
+        <tr><th>Problem</th><th>QueueOS solution</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Email sending blocks HTTP requests</td><td>Dedicated <code>email-sender</code> queue with 10 workers</td></tr>
+        <tr><td>Heavy PDF generation freezes the server</td><td>Isolated <code>report-gen</code> queue, 120s timeout</td></tr>
+        <tr><td>Image resizing consumes CPU</td><td>Separate <code>image-proc</code> workers</td></tr>
+        <tr><td>High-latency notifications</td><td>High-priority <code>notifications</code> queue</td></tr>
+        <tr><td>Failures with no automatic retry</td><td>BullMQ exponential backoff up to 3×</td></tr>
+        <tr><td>No visibility into processing</td><td>Real-time dashboard powered by Redis</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <h2>03 · Features</h2>
+    <h3>What's inside</h3>
+    <div class="features">
+      <div class="feat">
+        <h4>⚡ 4 specialized queues</h4>
+        <p>email-sender, report-gen, image-proc and notifications — each with their own concurrency, timeout and retry policy.</p>
       </div>
-      <div class="card green">
-        <div class="val" id="m-completed">--</div>
-        <div class="lbl">completed</div>
+      <div class="feat">
+        <h4>📊 Real-time dashboard</h4>
+        <p>Live cards, throughput chart, queue states, recent jobs and worker stats updating every 2 seconds via Redis polling.</p>
       </div>
-      <div class="card yellow">
-        <div class="val" id="m-avg">--</div>
-        <div class="lbl">avg duration (ms)</div>
+      <div class="feat">
+        <h4>⏰ Cron scheduling</h4>
+        <p>Schedule recurring jobs with standard cron patterns straight from the UI. Powered by BullMQ repeat.</p>
       </div>
-      <div class="card red">
-        <div class="val" id="m-failed">--</div>
-        <div class="lbl">failed</div>
+      <div class="feat">
+        <h4>👥 Multi-tenant</h4>
+        <p>Isolate jobs and metrics per tenant via the <code>X-Tenant-Id</code> header. Filter the dashboard live.</p>
       </div>
-      <div class="card purple">
-        <div class="val" id="m-success">--</div>
-        <div class="lbl">success rate (%)</div>
+      <div class="feat">
+        <h4>🚨 Webhook alerts</h4>
+        <p>POST to an external URL (Slack, Discord, Telegram) whenever 3+ jobs fail within 60 seconds.</p>
       </div>
-    </section>
-
-    <!-- Throughput chart -->
-    <section class="panel">
-      <h2>Throughput — últimos 60s</h2>
-      <svg id="chart" viewBox="0 0 600 160" preserveAspectRatio="none"></svg>
-    </section>
-
-    <!-- Histórico (1h / 24h) -->
-    <section class="panel">
-      <h2>
-        Histórico
-        <span style="float:right;display:inline-flex;gap:6px;">
-          <button class="btn" id="range-1h">1h</button>
-          <button class="btn" id="range-24h">24h</button>
-        </span>
-      </h2>
-      <svg id="history-chart" viewBox="0 0 600 160" preserveAspectRatio="none"></svg>
-      <div style="margin-top:12px;">
-        <a class="btn" href="/api/logs/export" download>⬇ Exportar todos os logs (CSV)</a>
+      <div class="feat">
+        <h4>📈 Prometheus + Grafana</h4>
+        <p><code>/metrics</code> endpoint in Prometheus exposition format. K8s manifests with HPA included.</p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Queues -->
-    <section class="panel">
-      <h2>Filas</h2>
-      <div id="queues" class="queues"></div>
-    </section>
+  <!-- QUEUES SHOWCASE -->
+  <section id="queues">
+    <h2>04 · Queues</h2>
+    <h3>4 specialized queues</h3>
+    <div class="queues-grid">
+      <div class="q-card" style="border-top-color: var(--green);">
+        <div class="q-name" style="color: var(--green);">email-sender</div>
+        <dl>
+          <dt>Concurrency</dt><dd>10 workers</dd>
+          <dt>Timeout</dt><dd>30s</dd>
+          <dt>Max retries</dt><dd>3×</dd>
+          <dt>Use cases</dt><dd>welcome, reset, newsletter</dd>
+        </dl>
+      </div>
+      <div class="q-card" style="border-top-color: var(--yellow);">
+        <div class="q-name" style="color: var(--yellow);">report-gen</div>
+        <dl>
+          <dt>Concurrency</dt><dd>3 workers</dd>
+          <dt>Timeout</dt><dd>120s</dd>
+          <dt>Max retries</dt><dd>2×</dd>
+          <dt>Use cases</dt><dd>monthly PDFs, analytics</dd>
+        </dl>
+      </div>
+      <div class="q-card" style="border-top-color: var(--purple);">
+        <div class="q-name" style="color: var(--purple);">image-proc</div>
+        <dl>
+          <dt>Concurrency</dt><dd>6 workers</dd>
+          <dt>Timeout</dt><dd>60s</dd>
+          <dt>Max retries</dt><dd>3×</dd>
+          <dt>Use cases</dt><dd>thumbnail, WebP, watermark</dd>
+        </dl>
+      </div>
+      <div class="q-card" style="border-top-color: var(--orange);">
+        <div class="q-name" style="color: var(--orange);">notifications</div>
+        <dl>
+          <dt>Concurrency</dt><dd>15 workers</dd>
+          <dt>Timeout</dt><dd>10s</dd>
+          <dt>Max retries</dt><dd>5×</dd>
+          <dt>Use cases</dt><dd>push, SMS, webhooks</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
 
-    <!-- Workers -->
-    <section class="panel">
-      <h2>Workers</h2>
-      <div id="workers" class="workers"></div>
-    </section>
+  <!-- ARCHITECTURE -->
+  <section id="arch">
+    <h2>05 · Architecture</h2>
+    <h3>How it works</h3>
+    <div class="arch">
+<pre>
+[API / App]  ──enqueue──▶  [Redis Broker]  ──consume──▶  [Workers x4 pools]
+     │                          │                              │
+ (HTTP req)            (Sorted Sets / Lists)              (Process Jobs)
+     │                          │                              │
+[BullMQ Queue Mgr]                                  [Prisma → PostgreSQL]
+                                                              │
+                              [Dashboard]  ◀──poll──  [Redis Stats + DB]
+</pre>
+    </div>
+  </section>
 
-    <!-- Cron jobs -->
-    <section class="panel wide">
-      <h2>Cron Jobs (jobs recorrentes)</h2>
-      <form id="cron-form" class="cron-form">
-        <select id="cron-queue">
-          <option value="email-sender">email-sender</option>
-          <option value="report-gen">report-gen</option>
-          <option value="image-proc">image-proc</option>
-          <option value="notifications">notifications</option>
-        </select>
-        <input type="text" id="cron-pattern" placeholder="cron pattern ex: */5 * * * *" required />
-        <input type="text" id="cron-payload" placeholder='payload JSON ex: {"to":"a@b.com","subject":"Hi","template":"welcome"}' />
-        <button type="submit" class="btn">+ agendar</button>
-      </form>
-      <table class="jobs">
-        <thead>
-          <tr><th>Fila</th><th>Pattern</th><th>Próxima execução</th><th>Ação</th></tr>
-        </thead>
-        <tbody id="cron-body"></tbody>
-      </table>
-      <p style="color:var(--muted);font-size:11px;margin-top:8px;">
-        Exemplos: <code>*/2 * * * *</code> a cada 2min ·
-        <code>0 9 * * *</code> todo dia 9h ·
-        <code>0 0 * * 1</code> toda segunda à meia-noite
-      </p>
-    </section>
+  <!-- STACK -->
+  <section id="stack">
+    <h2>06 · Tech Stack</h2>
+    <h3>Built with battle-tested tools</h3>
+    <div class="stack">
+      <div class="stack-item" style="border-color: var(--green);">
+        <h4 style="color: var(--green);">Node.js 20 LTS</h4>
+        <p>Non-blocking runtime, ideal for I/O-heavy job processing.</p>
+      </div>
+      <div class="stack-item" style="border-color: var(--red);">
+        <h4 style="color: var(--red);">Redis 7</h4>
+        <p>In-memory message broker storing queues as sorted sets and lists.</p>
+      </div>
+      <div class="stack-item" style="border-color: var(--purple);">
+        <h4 style="color: var(--purple);">BullMQ 5</h4>
+        <p>Queue library with retries, delayed jobs, priority and rate limiting.</p>
+      </div>
+      <div class="stack-item" style="border-color: var(--cyan);">
+        <h4 style="color: var(--cyan);">TypeScript 6</h4>
+        <p>Static typing with strongly-typed job interfaces.</p>
+      </div>
+      <div class="stack-item" style="border-color: var(--orange);">
+        <h4 style="color: var(--orange);">Prisma 6</h4>
+        <p>Type-safe ORM managing migrations and DB access.</p>
+      </div>
+      <div class="stack-item" style="border-color: var(--yellow);">
+        <h4 style="color: var(--yellow);">PostgreSQL 16</h4>
+        <p>Relational store for job logs, queue snapshots and audit history.</p>
+      </div>
+    </div>
+  </section>
 
-    <!-- Recent jobs -->
-    <section class="panel wide">
-      <h2>Últimos 10 jobs</h2>
-      <table class="jobs">
-        <thead>
-          <tr>
-            <th>Fila</th>
-            <th>Job ID</th>
-            <th>Status</th>
-            <th>Duração</th>
-            <th>Tentativas</th>
-            <th>Quando</th>
-          </tr>
-        </thead>
-        <tbody id="jobs-body"></tbody>
-      </table>
-    </section>
-  </main>
-
+  <!-- FOOTER -->
   <footer>
-    QueueOS v0.1 — atualizando a cada 2s
+    <p>QueueOS v0.1 · MIT License · Built by <a href="https://github.com/KauaEngineer" target="_blank">@KauaEngineer</a></p>
+    <p style="margin-top: 8px;">
+      <a href="/dashboard">Dashboard</a> ·
+      <a href="https://github.com/KauaEngineer/queueos" target="_blank">GitHub</a> ·
+      <a href="/api/health">Health</a> ·
+      <a href="/metrics">Metrics</a>
+    </p>
   </footer>
 
-  <script src="/app.js"></script>
 </body>
 </html>

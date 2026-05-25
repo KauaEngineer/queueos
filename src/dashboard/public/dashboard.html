@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QueueOS Dashboard</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">QUEUE<span>OS</span></div>
+    <div class="subtitle">Async Queue &amp; Job Processing</div>
+    <div class="tenant-box">
+      <label for="tenant-input">tenant:</label>
+      <input id="tenant-input" type="text" value="default" maxlength="32" />
+    </div>
+    <div class="status" id="status">● online</div>
+  </header>
+
+  <main class="grid">
+    <!-- Cards -->
+    <section class="cards">
+      <div class="card cyan">
+        <div class="val" id="m-perMin">--</div>
+        <div class="lbl">jobs / min</div>
+      </div>
+      <div class="card green">
+        <div class="val" id="m-completed">--</div>
+        <div class="lbl">completed</div>
+      </div>
+      <div class="card yellow">
+        <div class="val" id="m-avg">--</div>
+        <div class="lbl">avg duration (ms)</div>
+      </div>
+      <div class="card red">
+        <div class="val" id="m-failed">--</div>
+        <div class="lbl">failed</div>
+      </div>
+      <div class="card purple">
+        <div class="val" id="m-success">--</div>
+        <div class="lbl">success rate (%)</div>
+      </div>
+    </section>
+
+    <!-- Throughput chart -->
+    <section class="panel">
+      <h2>Throughput — last 60s</h2>
+      <svg id="chart" viewBox="0 0 600 160" preserveAspectRatio="none"></svg>
+    </section>
+
+    <!-- History (1h / 24h) -->
+    <section class="panel">
+      <h2>
+        History
+        <span style="float:right;display:inline-flex;gap:6px;">
+          <button class="btn" id="range-1h">1h</button>
+          <button class="btn" id="range-24h">24h</button>
+        </span>
+      </h2>
+      <svg id="history-chart" viewBox="0 0 600 160" preserveAspectRatio="none"></svg>
+      <div style="margin-top:12px;">
+        <a class="btn" href="/api/logs/export" download>⬇ Export all logs (CSV)</a>
+      </div>
+    </section>
+
+    <!-- Queues -->
+    <section class="panel">
+      <h2>Queues</h2>
+      <div id="queues" class="queues"></div>
+    </section>
+
+    <!-- Workers -->
+    <section class="panel">
+      <h2>Workers</h2>
+      <div id="workers" class="workers"></div>
+    </section>
+
+    <!-- Cron jobs -->
+    <section class="panel wide">
+      <h2>Cron Jobs (repeating)</h2>
+      <form id="cron-form" class="cron-form">
+        <select id="cron-queue">
+          <option value="email-sender">email-sender</option>
+          <option value="report-gen">report-gen</option>
+          <option value="image-proc">image-proc</option>
+          <option value="notifications">notifications</option>
+        </select>
+        <input type="text" id="cron-pattern" placeholder="cron pattern e.g. */5 * * * *" required />
+        <input type="text" id="cron-payload" placeholder='payload JSON e.g. {"to":"a@b.com","subject":"Hi","template":"welcome"}' />
+        <button type="submit" class="btn">+ schedule</button>
+      </form>
+      <table class="jobs">
+        <thead>
+          <tr><th>Queue</th><th>Pattern</th><th>Next run</th><th>Action</th></tr>
+        </thead>
+        <tbody id="cron-body"></tbody>
+      </table>
+      <p style="color:var(--muted);font-size:11px;margin-top:8px;">
+        Examples: <code>*/2 * * * *</code> every 2min ·
+        <code>0 9 * * *</code> daily at 9am ·
+        <code>0 0 * * 1</code> Mondays at midnight
+      </p>
+    </section>
+
+    <!-- Recent jobs -->
+    <section class="panel wide">
+      <h2>Recent jobs (last 10)</h2>
+      <table class="jobs">
+        <thead>
+          <tr>
+            <th>Queue</th>
+            <th>Job ID</th>
+            <th>Status</th>
+            <th>Duration</th>
+            <th>Attempts</th>
+            <th>When</th>
+          </tr>
+        </thead>
+        <tbody id="jobs-body"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    QueueOS v0.1 — refreshing every 2s
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

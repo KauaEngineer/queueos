@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let payload = {};
       if (raw) {
         try { payload = JSON.parse(raw); }
-        catch { alert('payload deve ser JSON válido'); return; }
+        catch { alert('payload must be valid JSON'); return; }
       }
       const r = await postJson('/api/cron', { queue, pattern, payload });
       if (r.ok) {
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         $('cron-payload').value = '';
         updateCron();
       } else {
-        alert('erro: ' + (r.error ?? 'desconhecido'));
+        alert('error: ' + (r.error ?? 'unknown'));
       }
     });
   }
@@ -91,9 +91,9 @@ async function updateMetrics() {
   try {
     const m = await fetchJson('/api/metrics');
     $('m-perMin').textContent = m.jobsPerMin;
-    $('m-completed').textContent = m.completed.toLocaleString('pt-BR');
+    $('m-completed').textContent = m.completed.toLocaleString('en-US');
     $('m-avg').textContent = m.avgDurationMs;
-    $('m-failed').textContent = m.failed.toLocaleString('pt-BR');
+    $('m-failed').textContent = m.failed.toLocaleString('en-US');
     $('m-success').textContent = m.successRate + '%';
     setStatus(true);
   } catch {
@@ -112,7 +112,7 @@ async function toggleQueue(name, paused) {
 window.toggleQueue = toggleQueue;
 
 async function deleteCron(queue, key) {
-  if (!confirm('Remover este cron job?')) return;
+  if (!confirm('Remove this cron job?')) return;
   await deleteJson('/api/cron', { queue, key });
   updateCron();
 }
@@ -124,7 +124,7 @@ async function updateCron() {
     const body = $('cron-body');
     if (!body) return;
     if (jobs.length === 0) {
-      body.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:16px;">nenhum cron job agendado</td></tr>`;
+      body.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:16px;">no cron jobs scheduled</td></tr>`;
       return;
     }
     body.innerHTML = jobs
@@ -133,8 +133,8 @@ async function updateCron() {
       <tr>
         <td>${j.queue}</td>
         <td><code>${j.pattern ?? '—'}</code></td>
-        <td>${j.next ? new Date(j.next).toLocaleString('pt-BR') : '—'}</td>
-        <td><button class="btn" onclick="deleteCron('${j.queue}', '${j.key.replace(/'/g, "\\'")}')">🗑 remover</button></td>
+        <td>${j.next ? new Date(j.next).toLocaleString('en-US') : '—'}</td>
+        <td><button class="btn" onclick="deleteCron('${j.queue}', '${j.key.replace(/'/g, "\\'")}')">🗑 remove</button></td>
       </tr>`,
       )
       .join('');
@@ -154,7 +154,7 @@ async function updateQueues() {
           ${q.name}
           ${q.paused ? '<span class="pill yellow">paused</span>' : ''}
           <button class="btn" onclick="toggleQueue('${q.name}', ${q.paused})">
-            ${q.paused ? '▶ retomar' : '⏸ pausar'}
+            ${q.paused ? '▶ resume' : '⏸ pause'}
           </button>
         </div>
         <div class="pills">
@@ -184,7 +184,7 @@ async function updateWorkers() {
       <div class="worker-row">
         <div class="name">${w.name}</div>
         <div class="stats">
-          <span>concorrência: <b>${w.concurrency}</b></span>
+          <span>concurrency: <b>${w.concurrency}</b></span>
           <span>CPU: <b>${w.cpu}%</b></span>
           <span>RAM: <b>${w.memory} MB</b></span>
         </div>
@@ -202,18 +202,18 @@ async function updateWorkers() {
 function timeAgo(iso) {
   const diff = Date.now() - new Date(iso).getTime();
   const s = Math.floor(diff / 1000);
-  if (s < 60) return `${s}s atrás`;
+  if (s < 60) return `${s}s ago`;
   const m = Math.floor(s / 60);
-  if (m < 60) return `${m}min atrás`;
+  if (m < 60) return `${m}min ago`;
   const h = Math.floor(m / 60);
-  return `${h}h atrás`;
+  return `${h}h ago`;
 }
 
 async function updateJobs() {
   try {
     const { jobs } = await fetchJson('/api/jobs/recent');
     if (jobs.length === 0) {
-      $('jobs-body').innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px;">nenhum job ainda</td></tr>`;
+      $('jobs-body').innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px;">no jobs yet</td></tr>`;
       return;
     }
     $('jobs-body').innerHTML = jobs
@@ -300,7 +300,7 @@ async function updateHistory() {
       })
       .join('');
 
-    const label = range === '24h' ? 'últimas 24h (por hora)' : 'última hora (por minuto)';
+    const label = range === '24h' ? 'last 24h (by hour)' : 'last hour (by minute)';
     document.getElementById('history-chart').innerHTML = `
       ${bars}
       <text x="8" y="14" fill="var(--muted)" font-size="10" font-family="monospace">${label} • max: ${max}</text>

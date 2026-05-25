@@ -25,14 +25,23 @@ const SECRET = process.env.DASHBOARD_SECRET ?? 'dev-secret-trocar-em-prod';
 
 app.use(express.json());
 
-// Auth aplicada a tudo, exceto /api/health e /metrics (pra Prometheus scrape)
+const PUBLIC_DIR = path.join(__dirname, 'public');
+
+// Rotas públicas (landing, assets, health, metrics) — sem auth
+app.get('/', (_req, res) => res.sendFile(path.join(PUBLIC_DIR, 'index.html')));
+app.get('/style.css', (_req, res) => res.sendFile(path.join(PUBLIC_DIR, 'style.css')));
+app.get('/app.js', (_req, res) => res.sendFile(path.join(PUBLIC_DIR, 'app.js')));
+
+// Dashboard e API exigem auth (exceto /api/health e /metrics)
 app.use((req, res, next) => {
   if (req.path === '/api/health' || req.path === '/metrics') return next();
   return basicAuth(SECRET)(req, res, next);
 });
 
 app.use(tenantMiddleware);
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Dashboard SPA em /dashboard (depois do auth)
+app.get('/dashboard', (_req, res) => res.sendFile(path.join(PUBLIC_DIR, 'dashboard.html')));
 
 // ============================================
 // GET /api/queues

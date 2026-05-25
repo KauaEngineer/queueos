@@ -47,5 +47,6 @@ USER queueos
 
 ENTRYPOINT ["/sbin/tini", "--"]
 
-# Por padrão sobe os workers; docker-compose sobrescreve pra rodar dashboard
-CMD ["node", "dist/workers/index.js"]
+# Default: all-in-one (workers + dashboard no mesmo processo) — ideal pra Render free
+# docker-compose sobrescreve pra rodar workers e dashboard em containers separados
+CMD ["node", "dist/all-in-one.js"]

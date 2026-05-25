@@ -9,7 +9,10 @@
     "producer:test": "tsx src/test-producer.ts",
     "workers:start": "tsx src/workers/index.ts",
     "dashboard": "tsx src/dashboard/server.ts",
+    "start": "node dist/all-in-one.js",
+    "build": "tsc",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
     "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
@@ -27,7 +30,6 @@
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^25.9.1",
-    "prisma": "^6.19.3",
     "tsx": "^4.22.3",
     "typescript": "^6.0.3"
   },
@@ -36,6 +38,7 @@
     "bullmq": "^5.77.3",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "ioredis": "^5.10.1"
+    "ioredis": "^5.10.1",
+    "prisma": "^6.19.3"
   }
 }

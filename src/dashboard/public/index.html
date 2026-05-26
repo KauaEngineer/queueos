@@ -51,7 +51,6 @@
       font-size: 0.9em;
     }
 
-    /* ============ BACKGROUND ============ */
     .bg-grid {
       position: fixed; inset: 0; z-index: -2;
       background-image:
@@ -67,7 +66,6 @@
         radial-gradient(circle at 50% 100%, rgba(74, 222, 128, 0.06), transparent 50%);
     }
 
-    /* ============ NAV ============ */
     .nav {
       position: sticky; top: 0; z-index: 50;
       display: flex; align-items: center; justify-content: space-between;
@@ -75,15 +73,41 @@
       background: rgba(5, 8, 16, 0.7);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
+      gap: 16px;
     }
     .brand {
       font-size: 20px; font-weight: 900; letter-spacing: 2px;
       font-family: 'JetBrains Mono', monospace;
     }
     .brand span { color: var(--cyan); }
-    .nav-links { display: flex; gap: 28px; font-size: 13px; }
+    .nav-links { display: flex; gap: 28px; font-size: 13px; flex: 1; justify-content: center; }
     .nav-links a { color: var(--text-dim); font-weight: 500; }
     .nav-links a:hover { color: var(--cyan); }
+
+    /* Language toggle */
+    .lang-toggle {
+      display: inline-flex;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .lang-toggle button {
+      background: transparent;
+      color: var(--text-dim);
+      border: none;
+      padding: 6px 10px;
+      font-size: 11px; font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .lang-toggle button:hover { color: var(--text); }
+    .lang-toggle button.active {
+      background: var(--cyan); color: var(--bg);
+    }
+
     .nav-cta {
       background: var(--cyan); color: var(--bg);
       padding: 9px 18px; border-radius: 6px; font-weight: 700;
@@ -96,7 +120,6 @@
       opacity: 1;
     }
 
-    /* ============ HERO ============ */
     .hero {
       max-width: 1200px; margin: 0 auto;
       padding: 100px 32px 80px;
@@ -177,7 +200,6 @@
       border-color: var(--cyan); opacity: 1;
     }
 
-    /* ============ LIVE METRICS STRIP ============ */
     .live-metrics {
       max-width: 1100px; margin: 0 auto;
       display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -207,7 +229,6 @@
       margin-left: 6px;
     }
 
-    /* ============ SECTION ============ */
     section {
       max-width: 1200px; margin: 0 auto;
       padding: 100px 32px;
@@ -232,7 +253,6 @@
       font-size: 17px; color: var(--text-dim); max-width: 640px; margin-bottom: 56px;
     }
 
-    /* ============ STATS COUNTERS ============ */
     .stats {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 24px;
@@ -263,7 +283,6 @@
     .stat-card .stat-label { font-size: 13px; color: var(--text-dim); margin-top: 8px; }
     .stat-card .stat-desc { font-size: 11px; color: var(--muted); margin-top: 6px; }
 
-    /* ============ FLOW ANIMATION ============ */
     .flow-container {
       background: var(--panel);
       border: 1px solid var(--border);
@@ -277,15 +296,7 @@
     .flow-svg .node-label { fill: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; text-anchor: middle; }
     .flow-svg .node-sub { fill: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 10px; text-anchor: middle; }
     .flow-svg .pipe { stroke: var(--border-strong); stroke-width: 2; fill: none; }
-    .flow-svg .job-particle { opacity: 0; }
-    @keyframes flowParticle {
-      0% { opacity: 0; transform: translateX(0); }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { opacity: 0; transform: translateX(200px); }
-    }
 
-    /* ============ FEATURES ============ */
     .features-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
@@ -312,7 +323,6 @@
     .feat-card h4 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
     .feat-card p { font-size: 14px; color: var(--text-dim); }
 
-    /* ============ USE CASES ============ */
     .use-cases {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 20px;
@@ -336,7 +346,6 @@
       content: '→'; position: absolute; left: 0; color: var(--cyan);
     }
 
-    /* ============ CODE TABS ============ */
     .code-showcase {
       background: var(--panel);
       border: 1px solid var(--border);
@@ -376,7 +385,6 @@
     .fn { color: var(--cyan); }
     .var { color: var(--text); }
 
-    /* ============ COMPARISON TABLE ============ */
     .compare-wrap { overflow-x: auto; }
     .compare-table {
       width: 100%; border-collapse: separate; border-spacing: 0;
@@ -416,7 +424,6 @@
     .check { color: var(--green); font-weight: 700; }
     .cross { color: var(--red); font-weight: 700; }
 
-    /* ============ ARCHITECTURE ============ */
     .arch-diagram {
       background: var(--panel);
       border: 1px solid var(--border);
@@ -449,7 +456,6 @@
       text-align: left;
     }
 
-    /* ============ TECH STACK ============ */
     .stack-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 16px;
@@ -469,7 +475,6 @@
     }
     .stack-card p { font-size: 12px; color: var(--text-dim); }
 
-    /* ============ FAQ ============ */
     .faq-list { display: flex; flex-direction: column; gap: 12px; }
     .faq-item {
       background: var(--panel);
@@ -497,11 +502,10 @@
       padding: 0 24px;
     }
     .faq-item.open .faq-a {
-      max-height: 300px;
+      max-height: 400px;
       padding: 0 24px 20px;
     }
 
-    /* ============ FINAL CTA ============ */
     .final-cta {
       max-width: 900px; margin: 0 auto;
       text-align: center;
@@ -525,7 +529,6 @@
       color: var(--text-dim); margin-bottom: 32px; font-size: 16px;
     }
 
-    /* ============ FOOTER ============ */
     footer {
       border-top: 1px solid var(--border);
       padding: 40px 32px;
@@ -542,17 +545,17 @@
       font-family: 'JetBrains Mono', monospace; font-size: 11px;
     }
 
-    /* ============ FADE IN ON SCROLL ============ */
     .fade-in {
       opacity: 0; transform: translateY(30px);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
     .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-    /* ============ RESPONSIVE ============ */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+    }
     @media (max-width: 800px) {
       .nav { padding: 12px 20px; }
-      .nav-links { display: none; }
       .hero { padding: 60px 20px 50px; }
       section { padding: 60px 20px; }
       .arch-diagram { grid-template-columns: 1fr; }
@@ -571,135 +574,129 @@
 <nav class="nav">
   <div class="brand">QUEUE<span>OS</span></div>
   <div class="nav-links">
-    <a href="#stats">Performance</a>
-    <a href="#how">How it works</a>
-    <a href="#features">Features</a>
-    <a href="#code">Code</a>
-    <a href="#stack">Stack</a>
-    <a href="#faq">FAQ</a>
+    <a href="#stats" data-i18n="nav.performance">Performance</a>
+    <a href="#how" data-i18n="nav.howItWorks">How it works</a>
+    <a href="#features" data-i18n="nav.features">Features</a>
+    <a href="#code" data-i18n="nav.code">Code</a>
+    <a href="#stack" data-i18n="nav.stack">Stack</a>
+    <a href="#faq" data-i18n="nav.faq">FAQ</a>
     <a href="https://github.com/KauaEngineer/queueos" target="_blank">GitHub ↗</a>
   </div>
-  <a href="/dashboard" class="nav-cta">Open Dashboard →</a>
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button data-lang="pt" title="Português">PT</button>
+    <button data-lang="en" title="English" class="active">EN</button>
+  </div>
+  <a href="/dashboard" class="nav-cta" data-i18n="nav.cta">Open Dashboard →</a>
 </nav>
 
 <!-- ============================== HERO ============================== -->
 <header class="hero">
   <div class="pill-badge">
     <span class="dot"></span>
-    Production-grade async job processing
+    <span data-i18n="hero.badge">Production-grade async job processing</span>
   </div>
-  <h1>Offload heavy work.<br>Keep your API <span class="accent">blazing fast.</span></h1>
+  <h1 data-i18n-html="hero.title">Offload heavy work.<br>Keep your API <span class="accent">blazing fast.</span></h1>
   <div class="typewriter">
     <span id="tw-text"></span><span class="cursor"></span>
   </div>
-  <p class="lead">
+  <p class="lead" data-i18n-html="hero.lead">
     QueueOS is a self-hosted job queue system built on <strong>Node.js</strong>, <strong>Redis</strong> and <strong>BullMQ</strong>.
     Process emails, PDFs, image pipelines and notifications outside the request/response cycle —
     with a real-time dashboard, multi-tenancy, cron scheduling and Prometheus metrics out of the box.
   </p>
   <div class="hero-actions">
-    <a href="/dashboard" class="btn btn-primary">⚡ Open Live Dashboard</a>
-    <a href="https://github.com/KauaEngineer/queueos" target="_blank" class="btn btn-secondary">
-      ⭐ Star on GitHub
-    </a>
+    <a href="/dashboard" class="btn btn-primary" data-i18n="hero.cta1">⚡ Open Live Dashboard</a>
+    <a href="https://github.com/KauaEngineer/queueos" target="_blank" class="btn btn-secondary" data-i18n="hero.cta2">⭐ Star on GitHub</a>
   </div>
 
-  <!-- LIVE METRICS -->
   <div class="live-metrics">
     <div class="live-metric">
       <div class="num" id="live-completed">--</div>
-      <div class="lbl">Jobs Completed <span class="live-tag">LIVE</span></div>
+      <div class="lbl"><span data-i18n="hero.metric.completed">Jobs Completed</span> <span class="live-tag">LIVE</span></div>
     </div>
     <div class="live-metric">
       <div class="num" id="live-success">--</div>
-      <div class="lbl">Success Rate</div>
+      <div class="lbl" data-i18n="hero.metric.success">Success Rate</div>
     </div>
     <div class="live-metric">
       <div class="num" id="live-avg">--</div>
-      <div class="lbl">Avg Duration (ms)</div>
+      <div class="lbl" data-i18n="hero.metric.avg">Avg Duration (ms)</div>
     </div>
     <div class="live-metric">
       <div class="num" id="live-queues">4</div>
-      <div class="lbl">Active Queues</div>
+      <div class="lbl" data-i18n="hero.metric.queues">Active Queues</div>
     </div>
   </div>
 </header>
 
 <!-- ============================== STATS ============================== -->
 <section id="stats" class="fade-in">
-  <span class="eyebrow">02 · By the numbers</span>
-  <h2 class="section-title">Benchmarked for <span class="accent">throughput</span> &amp; reliability</h2>
-  <p class="section-sub">
+  <span class="eyebrow" data-i18n="stats.eyebrow">02 · By the numbers</span>
+  <h2 class="section-title" data-i18n-html="stats.title">Benchmarked for <span class="accent">throughput</span> &amp; reliability</h2>
+  <p class="section-sub" data-i18n="stats.sub">
     Tested on a single 8-vCPU server with 16GB RAM. Numbers scale linearly with worker replicas.
   </p>
   <div class="stats">
     <div class="stat-card" style="color: var(--cyan);">
       <div class="stat-num"><span class="counter" data-target="847">0</span><span class="stat-unit">/min</span></div>
-      <div class="stat-label">Throughput</div>
-      <div class="stat-desc">Average sustained job rate</div>
+      <div class="stat-label" data-i18n="stats.throughput.label">Throughput</div>
+      <div class="stat-desc" data-i18n="stats.throughput.desc">Average sustained job rate</div>
     </div>
     <div class="stat-card" style="color: var(--green);">
       <div class="stat-num"><span class="counter" data-target="24300">0</span></div>
-      <div class="stat-label">Jobs / Day</div>
-      <div class="stat-desc">Production reference workload</div>
+      <div class="stat-label" data-i18n="stats.jobsDay.label">Jobs / Day</div>
+      <div class="stat-desc" data-i18n="stats.jobsDay.desc">Production reference workload</div>
     </div>
     <div class="stat-card" style="color: var(--yellow);">
       <div class="stat-num"><span class="counter" data-target="1.2" data-decimals="1">0</span><span class="stat-unit">s</span></div>
-      <div class="stat-label">Avg Duration</div>
-      <div class="stat-desc">Across all 4 queue types</div>
+      <div class="stat-label" data-i18n="stats.avg.label">Avg Duration</div>
+      <div class="stat-desc" data-i18n="stats.avg.desc">Across all 4 queue types</div>
     </div>
     <div class="stat-card" style="color: var(--purple);">
       <div class="stat-num"><span class="counter" data-target="99.7" data-decimals="1">0</span><span class="stat-unit">%</span></div>
-      <div class="stat-label">Success Rate</div>
-      <div class="stat-desc">Auto-retry with exp. backoff</div>
+      <div class="stat-label" data-i18n="stats.success.label">Success Rate</div>
+      <div class="stat-desc" data-i18n="stats.success.desc">Auto-retry with exp. backoff</div>
     </div>
   </div>
 </section>
 
 <!-- ============================== HOW IT WORKS ============================== -->
 <section id="how" class="fade-in">
-  <span class="eyebrow">03 · How it works</span>
-  <h2 class="section-title">The classic <span class="accent">producer-consumer</span> pattern</h2>
-  <p class="section-sub">
+  <span class="eyebrow" data-i18n="how.eyebrow">03 · How it works</span>
+  <h2 class="section-title" data-i18n-html="how.title">The classic <span class="accent">producer-consumer</span> pattern</h2>
+  <p class="section-sub" data-i18n="how.sub">
     Your API enqueues jobs in Redis. Workers consume in parallel and persist results to PostgreSQL.
     The dashboard polls Redis stats every 2 seconds for live observability.
   </p>
 
   <div class="flow-container">
     <svg class="flow-svg" viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg">
-      <!-- Pipes -->
       <path class="pipe" d="M 160 160 L 340 160" stroke-dasharray="6 6"/>
       <path class="pipe" d="M 520 160 L 700 160" stroke-dasharray="6 6"/>
       <path class="pipe" d="M 430 200 L 430 270" stroke-dasharray="6 6"/>
       <path class="pipe" d="M 770 200 L 770 270" stroke-dasharray="6 6"/>
 
-      <!-- Producer -->
       <rect class="node-bg" x="20" y="100" width="140" height="120" rx="12" stroke="#22d3ee"/>
       <text class="node-label" x="90" y="145" fill="#22d3ee">PRODUCER</text>
-      <text class="node-sub" x="90" y="170">Your API / App</text>
+      <text class="node-sub flow-label" x="90" y="170" data-i18n="flow.producer.sub1">Your API / App</text>
       <text class="node-sub" x="90" y="195">queue.add()</text>
 
-      <!-- Redis broker -->
       <rect class="node-bg" x="340" y="100" width="180" height="120" rx="12" stroke="#f87171"/>
       <text class="node-label" x="430" y="145" fill="#f87171">REDIS BROKER</text>
-      <text class="node-sub" x="430" y="170">BullMQ Queues</text>
+      <text class="node-sub flow-label" x="430" y="170" data-i18n="flow.broker.sub1">BullMQ Queues</text>
       <text class="node-sub" x="430" y="190">wait / active / completed</text>
 
-      <!-- Workers -->
       <rect class="node-bg" x="700" y="100" width="180" height="120" rx="12" stroke="#4ade80"/>
       <text class="node-label" x="790" y="145" fill="#4ade80">WORKERS</text>
-      <text class="node-sub" x="790" y="170">x4 pools (10/3/6/15)</text>
-      <text class="node-sub" x="790" y="190">retry · backoff · progress</text>
+      <text class="node-sub flow-label" x="790" y="170" data-i18n="flow.workers.sub1">x4 pools (10/3/6/15)</text>
+      <text class="node-sub flow-label" x="790" y="190" data-i18n="flow.workers.sub2">retry · backoff · progress</text>
 
-      <!-- PostgreSQL -->
       <rect class="node-bg" x="340" y="270" width="180" height="40" rx="8" stroke="#facc15"/>
-      <text class="node-label" x="430" y="296" fill="#facc15">POSTGRESQL · Audit log</text>
+      <text class="node-label flow-label" x="430" y="296" fill="#facc15" data-i18n="flow.postgres">POSTGRESQL · Audit log</text>
 
-      <!-- Dashboard -->
       <rect class="node-bg" x="700" y="270" width="180" height="40" rx="8" stroke="#c084fc"/>
-      <text class="node-label" x="790" y="296" fill="#c084fc">DASHBOARD · /metrics</text>
+      <text class="node-label flow-label" x="790" y="296" fill="#c084fc" data-i18n="flow.dashboard">DASHBOARD · /metrics</text>
 
-      <!-- Flowing particles -->
       <circle r="5" fill="#22d3ee">
         <animateMotion dur="2.5s" repeatCount="indefinite" path="M 160 160 L 340 160"/>
       </circle>
@@ -727,106 +724,106 @@
 
 <!-- ============================== FEATURES ============================== -->
 <section id="features" class="fade-in">
-  <span class="eyebrow">04 · Features</span>
-  <h2 class="section-title">Everything you need to run jobs in <span class="accent">production</span></h2>
-  <p class="section-sub">
+  <span class="eyebrow" data-i18n="features.eyebrow">04 · Features</span>
+  <h2 class="section-title" data-i18n-html="features.title">Everything you need to run jobs in <span class="accent">production</span></h2>
+  <p class="section-sub" data-i18n="features.sub">
     Built-in retry policies, observability, multi-tenancy and deployment artifacts — no extra plugins required.
   </p>
   <div class="features-grid">
     <div class="feat-card">
       <div class="feat-icon" style="background: rgba(34,211,238,0.15); color: var(--cyan);">⚡</div>
-      <h4>4 specialized queues</h4>
-      <p>Dedicated pools for email, reports, image processing and notifications — each with its own concurrency, timeout and retry policy.</p>
+      <h4 data-i18n="features.f1.title">4 specialized queues</h4>
+      <p data-i18n="features.f1.desc">Dedicated pools for email, reports, image processing and notifications — each with its own concurrency, timeout and retry policy.</p>
     </div>
     <div class="feat-card">
       <div class="feat-icon" style="background: rgba(74,222,128,0.15); color: var(--green);">📊</div>
-      <h4>Real-time dashboard</h4>
-      <p>Live throughput charts, queue states, recent jobs and worker stats — refreshing every 2 seconds via Redis polling.</p>
+      <h4 data-i18n="features.f2.title">Real-time dashboard</h4>
+      <p data-i18n="features.f2.desc">Live throughput charts, queue states, recent jobs and worker stats — refreshing every 2 seconds via Redis polling.</p>
     </div>
     <div class="feat-card">
       <div class="feat-icon" style="background: rgba(250,204,21,0.15); color: var(--yellow);">⏰</div>
-      <h4>Cron scheduling</h4>
-      <p>Schedule recurring jobs with standard cron patterns directly from the dashboard UI. Powered by BullMQ repeat.</p>
+      <h4 data-i18n="features.f3.title">Cron scheduling</h4>
+      <p data-i18n="features.f3.desc">Schedule recurring jobs with standard cron patterns directly from the dashboard UI. Powered by BullMQ repeat.</p>
     </div>
     <div class="feat-card">
       <div class="feat-icon" style="background: rgba(192,132,252,0.15); color: var(--purple);">👥</div>
-      <h4>Multi-tenant isolation</h4>
-      <p>Per-tenant job tracking via the <code>X-Tenant-Id</code> header. Filter the dashboard and aggregate metrics by tenant.</p>
+      <h4 data-i18n="features.f4.title">Multi-tenant isolation</h4>
+      <p data-i18n-html="features.f4.desc">Per-tenant job tracking via the <code>X-Tenant-Id</code> header. Filter the dashboard and aggregate metrics by tenant.</p>
     </div>
     <div class="feat-card">
       <div class="feat-icon" style="background: rgba(248,113,113,0.15); color: var(--red);">🚨</div>
-      <h4>Webhook alerts</h4>
-      <p>POST to Slack, Discord or any URL when 3+ jobs fail within 60 seconds. Built-in cooldown to prevent floods.</p>
+      <h4 data-i18n="features.f5.title">Webhook alerts</h4>
+      <p data-i18n="features.f5.desc">POST to Slack, Discord or any URL when 3+ jobs fail within 60 seconds. Built-in cooldown to prevent floods.</p>
     </div>
     <div class="feat-card">
       <div class="feat-icon" style="background: rgba(251,146,60,0.15); color: var(--orange);">📈</div>
-      <h4>Prometheus + Grafana</h4>
-      <p><code>/metrics</code> endpoint in standard exposition format. K8s manifests with HPA scaling included.</p>
+      <h4 data-i18n="features.f6.title">Prometheus + Grafana</h4>
+      <p data-i18n-html="features.f6.desc"><code>/metrics</code> endpoint in standard exposition format. K8s manifests with HPA scaling included.</p>
     </div>
     <div class="feat-card">
       <div class="feat-icon" style="background: rgba(96,165,250,0.15); color: var(--blue);">📥</div>
-      <h4>CSV export</h4>
-      <p>Download up to 10k filtered job logs as CSV with one click — by queue, status or date range.</p>
+      <h4 data-i18n="features.f7.title">CSV export</h4>
+      <p data-i18n="features.f7.desc">Download up to 10k filtered job logs as CSV with one click — by queue, status or date range.</p>
     </div>
     <div class="feat-card">
       <div class="feat-icon" style="background: rgba(244,114,182,0.15); color: var(--pink);">⏸</div>
-      <h4>Pause &amp; resume</h4>
-      <p>Pause any queue from the UI without dropping in-flight jobs. Perfect for maintenance windows.</p>
+      <h4 data-i18n="features.f8.title">Pause &amp; resume</h4>
+      <p data-i18n="features.f8.desc">Pause any queue from the UI without dropping in-flight jobs. Perfect for maintenance windows.</p>
     </div>
     <div class="feat-card">
       <div class="feat-icon" style="background: rgba(34,211,238,0.15); color: var(--cyan);">🐳</div>
-      <h4>Container-ready</h4>
-      <p>Multi-stage Dockerfile, docker-compose for dev, and Kubernetes manifests (HPA, PVC, healthchecks) for production.</p>
+      <h4 data-i18n="features.f9.title">Container-ready</h4>
+      <p data-i18n="features.f9.desc">Multi-stage Dockerfile, docker-compose for dev, and Kubernetes manifests (HPA, PVC, healthchecks) for production.</p>
     </div>
   </div>
 </section>
 
 <!-- ============================== USE CASES ============================== -->
 <section id="use-cases" class="fade-in">
-  <span class="eyebrow">05 · Use cases</span>
-  <h2 class="section-title">Built for <span class="accent">real-world</span> workloads</h2>
-  <p class="section-sub">
+  <span class="eyebrow" data-i18n="useCases.eyebrow">05 · Use cases</span>
+  <h2 class="section-title" data-i18n-html="useCases.title">Built for <span class="accent">real-world</span> workloads</h2>
+  <p class="section-sub" data-i18n="useCases.sub">
     Wherever you have heavy work outside the critical path, QueueOS fits in.
   </p>
   <div class="use-cases">
     <div class="use-card">
       <span class="use-emoji">🛒</span>
-      <h4>E-commerce</h4>
+      <h4 data-i18n="useCases.ecom.title">E-commerce</h4>
       <ul>
-        <li>Order confirmation emails</li>
-        <li>Invoice PDF generation</li>
-        <li>Inventory sync webhooks</li>
-        <li>Shipping label rendering</li>
+        <li data-i18n="useCases.ecom.i1">Order confirmation emails</li>
+        <li data-i18n="useCases.ecom.i2">Invoice PDF generation</li>
+        <li data-i18n="useCases.ecom.i3">Inventory sync webhooks</li>
+        <li data-i18n="useCases.ecom.i4">Shipping label rendering</li>
       </ul>
     </div>
     <div class="use-card">
       <span class="use-emoji">📧</span>
-      <h4>Email marketing</h4>
+      <h4 data-i18n="useCases.email.title">Email marketing</h4>
       <ul>
-        <li>Newsletter blast (millions)</li>
-        <li>Transactional drip campaigns</li>
-        <li>Bounce/complaint handling</li>
-        <li>Send-time optimization</li>
+        <li data-i18n="useCases.email.i1">Newsletter blast (millions)</li>
+        <li data-i18n="useCases.email.i2">Transactional drip campaigns</li>
+        <li data-i18n="useCases.email.i3">Bounce/complaint handling</li>
+        <li data-i18n="useCases.email.i4">Send-time optimization</li>
       </ul>
     </div>
     <div class="use-card">
       <span class="use-emoji">📊</span>
-      <h4>SaaS analytics</h4>
+      <h4 data-i18n="useCases.saas.title">SaaS analytics</h4>
       <ul>
-        <li>Monthly report generation</li>
-        <li>Daily aggregations</li>
-        <li>Data warehouse syncs</li>
-        <li>Customer usage rollups</li>
+        <li data-i18n="useCases.saas.i1">Monthly report generation</li>
+        <li data-i18n="useCases.saas.i2">Daily aggregations</li>
+        <li data-i18n="useCases.saas.i3">Data warehouse syncs</li>
+        <li data-i18n="useCases.saas.i4">Customer usage rollups</li>
       </ul>
     </div>
     <div class="use-card">
       <span class="use-emoji">🖼</span>
-      <h4>Media platforms</h4>
+      <h4 data-i18n="useCases.media.title">Media platforms</h4>
       <ul>
-        <li>Image resize &amp; WebP convert</li>
-        <li>Video thumbnail extraction</li>
-        <li>OCR on uploaded docs</li>
-        <li>Watermark application</li>
+        <li data-i18n="useCases.media.i1">Image resize &amp; WebP convert</li>
+        <li data-i18n="useCases.media.i2">Video thumbnail extraction</li>
+        <li data-i18n="useCases.media.i3">OCR on uploaded docs</li>
+        <li data-i18n="useCases.media.i4">Watermark application</li>
       </ul>
     </div>
   </div>
@@ -834,9 +831,9 @@
 
 <!-- ============================== CODE SHOWCASE ============================== -->
 <section id="code" class="fade-in">
-  <span class="eyebrow">06 · Developer experience</span>
-  <h2 class="section-title">Strongly typed. <span class="accent">No surprises.</span></h2>
-  <p class="section-sub">
+  <span class="eyebrow" data-i18n="code.eyebrow">06 · Developer experience</span>
+  <h2 class="section-title" data-i18n-html="code.title">Strongly typed. <span class="accent">No surprises.</span></h2>
+  <p class="section-sub" data-i18n="code.sub">
     Every job is a TypeScript interface. IDE autocomplete and compile-time checks across producers and workers.
   </p>
   <div class="code-showcase">
@@ -930,16 +927,16 @@ GET   /api/health              <span class="com">// Liveness probe</span></pre><
 
 <!-- ============================== COMPARISON ============================== -->
 <section id="compare" class="fade-in">
-  <span class="eyebrow">07 · Comparison</span>
-  <h2 class="section-title">Why not just use <span class="accent">serverless functions?</span></h2>
-  <p class="section-sub">
+  <span class="eyebrow" data-i18n="compare.eyebrow">07 · Comparison</span>
+  <h2 class="section-title" data-i18n-html="compare.title">Why not just use <span class="accent">serverless functions?</span></h2>
+  <p class="section-sub" data-i18n="compare.sub">
     Serverless excels at request-response. Long-running, retriable, observable jobs are a different beast.
   </p>
   <div class="compare-wrap">
     <table class="compare-table">
       <thead>
         <tr>
-          <th>Capability</th>
+          <th data-i18n="compare.col.capability">Capability</th>
           <th class="highlight">QueueOS</th>
           <th>Vercel Cron</th>
           <th>AWS SQS + Lambda</th>
@@ -948,53 +945,53 @@ GET   /api/health              <span class="com">// Liveness probe</span></pre><
       </thead>
       <tbody>
         <tr>
-          <td>Long-running jobs (&gt; 60s)</td>
-          <td class="highlight"><span class="check">✓</span> Up to 120s default</td>
-          <td><span class="cross">✗</span> 10–60s only</td>
-          <td><span class="check">✓</span> Up to 15min</td>
-          <td><span class="check">✓</span> Unlimited</td>
+          <td data-i18n="compare.row1.label">Long-running jobs (&gt; 60s)</td>
+          <td class="highlight" data-i18n="compare.row1.queueos"><span class="check">✓</span> Up to 120s default</td>
+          <td data-i18n="compare.row1.vercel"><span class="cross">✗</span> 10–60s only</td>
+          <td data-i18n="compare.row1.sqs"><span class="check">✓</span> Up to 15min</td>
+          <td data-i18n="compare.row1.sidekiq"><span class="check">✓</span> Unlimited</td>
         </tr>
         <tr>
-          <td>Real-time dashboard</td>
-          <td class="highlight"><span class="check">✓</span> Included</td>
-          <td><span class="cross">✗</span> Logs only</td>
-          <td><span class="cross">✗</span> CloudWatch DIY</td>
-          <td><span class="check">✓</span> Web UI</td>
+          <td data-i18n="compare.row2.label">Real-time dashboard</td>
+          <td class="highlight" data-i18n="compare.row2.queueos"><span class="check">✓</span> Included</td>
+          <td data-i18n="compare.row2.vercel"><span class="cross">✗</span> Logs only</td>
+          <td data-i18n="compare.row2.sqs"><span class="cross">✗</span> CloudWatch DIY</td>
+          <td data-i18n="compare.row2.sidekiq"><span class="check">✓</span> Web UI</td>
         </tr>
         <tr>
-          <td>Retry with exponential backoff</td>
-          <td class="highlight"><span class="check">✓</span> Configurable</td>
-          <td><span class="cross">✗</span> Manual</td>
-          <td><span class="check">✓</span> DLQ + retries</td>
-          <td><span class="check">✓</span> Built-in</td>
+          <td data-i18n="compare.row3.label">Retry with exponential backoff</td>
+          <td class="highlight" data-i18n="compare.row3.queueos"><span class="check">✓</span> Configurable</td>
+          <td data-i18n="compare.row3.vercel"><span class="cross">✗</span> Manual</td>
+          <td data-i18n="compare.row3.sqs"><span class="check">✓</span> DLQ + retries</td>
+          <td data-i18n="compare.row3.sidekiq"><span class="check">✓</span> Built-in</td>
         </tr>
         <tr>
-          <td>Multi-tenant isolation</td>
-          <td class="highlight"><span class="check">✓</span> Header-based</td>
+          <td data-i18n="compare.row4.label">Multi-tenant isolation</td>
+          <td class="highlight" data-i18n="compare.row4.queueos"><span class="check">✓</span> Header-based</td>
           <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
           <td><span class="cross">✗</span></td>
         </tr>
         <tr>
-          <td>Self-hosted / no vendor lock</td>
-          <td class="highlight"><span class="check">✓</span> Docker + K8s</td>
-          <td><span class="cross">✗</span> Vercel only</td>
-          <td><span class="cross">✗</span> AWS only</td>
+          <td data-i18n="compare.row5.label">Self-hosted / no vendor lock</td>
+          <td class="highlight" data-i18n="compare.row5.queueos"><span class="check">✓</span> Docker + K8s</td>
+          <td data-i18n="compare.row5.vercel"><span class="cross">✗</span> Vercel only</td>
+          <td data-i18n="compare.row5.sqs"><span class="cross">✗</span> AWS only</td>
           <td><span class="check">✓</span></td>
         </tr>
         <tr>
-          <td>Language</td>
+          <td data-i18n="compare.row6.label">Language</td>
           <td class="highlight">Node.js / TypeScript</td>
           <td>Node.js / Edge</td>
-          <td>Any (Lambda)</td>
+          <td data-i18n="compare.row6.sqs">Any (Lambda)</td>
           <td>Ruby</td>
         </tr>
         <tr>
-          <td>Cost at scale</td>
-          <td class="highlight">Fixed (your infra)</td>
-          <td>Pay per invocation</td>
-          <td>Pay per req + duration</td>
-          <td>Fixed (your infra)</td>
+          <td data-i18n="compare.row7.label">Cost at scale</td>
+          <td class="highlight" data-i18n="compare.row7.queueos">Fixed (your infra)</td>
+          <td data-i18n="compare.row7.vercel">Pay per invocation</td>
+          <td data-i18n="compare.row7.sqs">Pay per req + duration</td>
+          <td data-i18n="compare.row7.sidekiq">Fixed (your infra)</td>
         </tr>
       </tbody>
     </table>
@@ -1003,15 +1000,15 @@ GET   /api/health              <span class="com">// Liveness probe</span></pre><
 
 <!-- ============================== ARCHITECTURE ============================== -->
 <section id="arch" class="fade-in">
-  <span class="eyebrow">08 · Architecture</span>
-  <h2 class="section-title">Three layers, <span class="accent">no magic</span></h2>
-  <p class="section-sub">
+  <span class="eyebrow" data-i18n="arch.eyebrow">08 · Architecture</span>
+  <h2 class="section-title" data-i18n-html="arch.title">Three layers, <span class="accent">no magic</span></h2>
+  <p class="section-sub" data-i18n="arch.sub">
     Producer enqueues. Redis brokers. Workers consume. PostgreSQL persists results for audit.
   </p>
 
   <div class="arch-diagram">
     <div class="arch-layer">
-      <h5>Producer Layer</h5>
+      <h5 data-i18n="arch.layer1.title">Producer Layer</h5>
       <div class="items">
         <div class="item" style="border-color: var(--cyan);">REST API</div>
         <div class="item" style="border-color: var(--cyan);">jobProducer.ts</div>
@@ -1019,7 +1016,7 @@ GET   /api/health              <span class="com">// Liveness probe</span></pre><
       </div>
     </div>
     <div class="arch-layer">
-      <h5>Broker Layer</h5>
+      <h5 data-i18n="arch.layer2.title">Broker Layer</h5>
       <div class="items">
         <div class="item" style="border-color: var(--red);">Redis 7</div>
         <div class="item" style="border-color: var(--red);">BullMQ Queues</div>
@@ -1027,11 +1024,11 @@ GET   /api/health              <span class="com">// Liveness probe</span></pre><
       </div>
     </div>
     <div class="arch-layer">
-      <h5>Consumer Layer</h5>
+      <h5 data-i18n="arch.layer3.title">Consumer Layer</h5>
       <div class="items">
-        <div class="item" style="border-color: var(--green);">4 Worker pools</div>
+        <div class="item" style="border-color: var(--green);"><span data-i18n="arch.l3.i1">4 Worker pools</span></div>
         <div class="item" style="border-color: var(--green);">Prisma → Postgres</div>
-        <div class="item" style="border-color: var(--green);">Snapshots scheduler</div>
+        <div class="item" style="border-color: var(--green);"><span data-i18n="arch.l3.i3">Snapshots scheduler</span></div>
       </div>
     </div>
   </div>
@@ -1039,119 +1036,474 @@ GET   /api/health              <span class="com">// Liveness probe</span></pre><
 
 <!-- ============================== STACK ============================== -->
 <section id="stack" class="fade-in">
-  <span class="eyebrow">09 · Tech stack</span>
-  <h2 class="section-title">Built on <span class="accent">battle-tested</span> tools</h2>
-  <p class="section-sub">
+  <span class="eyebrow" data-i18n="stack.eyebrow">09 · Tech stack</span>
+  <h2 class="section-title" data-i18n-html="stack.title">Built on <span class="accent">battle-tested</span> tools</h2>
+  <p class="section-sub" data-i18n="stack.sub">
     No experimental libraries. Every dependency has a multi-year track record in production.
   </p>
   <div class="stack-grid">
     <div class="stack-card" style="border-color: var(--green);">
       <h5 style="color: var(--green);">Node.js 20 LTS</h5>
-      <p>Non-blocking I/O runtime. Worker processes spawn via cluster.</p>
+      <p data-i18n="stack.node">Non-blocking I/O runtime. Worker processes spawn via cluster.</p>
     </div>
     <div class="stack-card" style="border-color: var(--red);">
       <h5 style="color: var(--red);">Redis 7</h5>
-      <p>In-memory broker. Queues stored as sorted sets &amp; lists.</p>
+      <p data-i18n="stack.redis">In-memory broker. Queues stored as sorted sets &amp; lists.</p>
     </div>
     <div class="stack-card" style="border-color: var(--purple);">
       <h5 style="color: var(--purple);">BullMQ 5</h5>
-      <p>Queue library: retries, delays, priority, rate limit.</p>
+      <p data-i18n="stack.bullmq">Queue library: retries, delays, priority, rate limit.</p>
     </div>
     <div class="stack-card" style="border-color: var(--cyan);">
       <h5 style="color: var(--cyan);">TypeScript 6</h5>
-      <p>Strict typing across producers, jobs and workers.</p>
+      <p data-i18n="stack.ts">Strict typing across producers, jobs and workers.</p>
     </div>
     <div class="stack-card" style="border-color: var(--orange);">
       <h5 style="color: var(--orange);">Prisma 6</h5>
-      <p>Type-safe ORM with migrations and seed.</p>
+      <p data-i18n="stack.prisma">Type-safe ORM with migrations and seed.</p>
     </div>
     <div class="stack-card" style="border-color: var(--yellow);">
       <h5 style="color: var(--yellow);">PostgreSQL 16</h5>
-      <p>Audit log, snapshots and tenant data.</p>
+      <p data-i18n="stack.pg">Audit log, snapshots and tenant data.</p>
     </div>
     <div class="stack-card" style="border-color: var(--blue);">
       <h5 style="color: var(--blue);">Express 5</h5>
-      <p>Minimal HTTP layer for dashboard API.</p>
+      <p data-i18n="stack.express">Minimal HTTP layer for dashboard API.</p>
     </div>
     <div class="stack-card" style="border-color: var(--pink);">
       <h5 style="color: var(--pink);">Docker + K8s</h5>
-      <p>Multi-stage build. Manifests with HPA + PVC.</p>
+      <p data-i18n="stack.docker">Multi-stage build. Manifests with HPA + PVC.</p>
     </div>
   </div>
 </section>
 
 <!-- ============================== FAQ ============================== -->
 <section id="faq" class="fade-in">
-  <span class="eyebrow">10 · FAQ</span>
-  <h2 class="section-title">Common <span class="accent">questions</span></h2>
-  <p class="section-sub">
+  <span class="eyebrow" data-i18n="faq.eyebrow">10 · FAQ</span>
+  <h2 class="section-title" data-i18n-html="faq.title">Common <span class="accent">questions</span></h2>
+  <p class="section-sub" data-i18n="faq.sub">
     Some of what recruiters and engineers usually ask about this project.
   </p>
   <div class="faq-list">
     <div class="faq-item">
-      <div class="faq-q">Why BullMQ instead of plain Redis or RabbitMQ? <span class="arr">+</span></div>
-      <div class="faq-a">BullMQ gives us retries with exponential backoff, delayed jobs, priority lanes, rate limiting and a rich event API — for free, on top of Redis. RabbitMQ is great but adds operational overhead; here Redis doubles as cache + broker.</div>
+      <div class="faq-q"><span data-i18n="faq.q1">Why BullMQ instead of plain Redis or RabbitMQ?</span> <span class="arr">+</span></div>
+      <div class="faq-a" data-i18n="faq.a1">BullMQ gives us retries with exponential backoff, delayed jobs, priority lanes, rate limiting and a rich event API — for free, on top of Redis. RabbitMQ is great but adds operational overhead; here Redis doubles as cache + broker.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">Why not just use serverless functions / Vercel Cron? <span class="arr">+</span></div>
-      <div class="faq-a">Serverless excels at request-response, but struggles with long-running jobs (&gt;60s on most plans), real-time progress updates, observability and cost predictability. QueueOS workers run continuously and can process jobs of any duration with zero cold-start overhead.</div>
+      <div class="faq-q"><span data-i18n="faq.q2">Why not just use serverless functions / Vercel Cron?</span> <span class="arr">+</span></div>
+      <div class="faq-a" data-i18n="faq.a2">Serverless excels at request-response, but struggles with long-running jobs (>60s on most plans), real-time progress updates, observability and cost predictability. QueueOS workers run continuously and can process jobs of any duration with zero cold-start overhead.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">Is this production-ready? <span class="arr">+</span></div>
-      <div class="faq-a">The architecture is — BullMQ + Redis is what powers job processing at Atlassian, Microsoft and thousands of startups. This specific implementation is a portfolio project; before shipping to production you'd want test coverage, structured logging (pino), Sentry integration and stricter resource limits.</div>
+      <div class="faq-q"><span data-i18n="faq.q3">Is this production-ready?</span> <span class="arr">+</span></div>
+      <div class="faq-a" data-i18n="faq.a3">The architecture is — BullMQ + Redis is what powers job processing at Atlassian, Microsoft and thousands of startups. This specific implementation is a portfolio project; before shipping to production you'd want test coverage, structured logging (pino), Sentry integration and stricter resource limits.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">How does multi-tenancy work? <span class="arr">+</span></div>
-      <div class="faq-a">Every API request reads <code>X-Tenant-Id</code> from the headers (default: "default"). Jobs carry the tenant ID in their data, workers persist it to the audit log, and dashboard queries filter by tenant. Different tenants never see each other's data.</div>
+      <div class="faq-q"><span data-i18n="faq.q4">How does multi-tenancy work?</span> <span class="arr">+</span></div>
+      <div class="faq-a" data-i18n-html="faq.a4">Every API request reads <code>X-Tenant-Id</code> from the headers (default: "default"). Jobs carry the tenant ID in their data, workers persist it to the audit log, and dashboard queries filter by tenant. Different tenants never see each other's data.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">How do I deploy this? <span class="arr">+</span></div>
-      <div class="faq-a">Three options: <strong>docker compose up</strong> for local stack (Redis + Postgres + workers + dashboard); <strong>npm start</strong> on any Node host (Render, Railway, Fly.io) with managed Redis/Postgres; or <strong>kubectl apply -f k8s/</strong> on any Kubernetes cluster, with HPA auto-scaling workers based on queue depth.</div>
+      <div class="faq-q"><span data-i18n="faq.q5">How do I deploy this?</span> <span class="arr">+</span></div>
+      <div class="faq-a" data-i18n-html="faq.a5">Three options: <strong>docker compose up</strong> for local stack (Redis + Postgres + workers + dashboard); <strong>npm start</strong> on any Node host (Render, Railway, Fly.io) with managed Redis/Postgres; or <strong>kubectl apply -f k8s/</strong> on any Kubernetes cluster, with HPA auto-scaling workers based on queue depth.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">What's the cost to run this in production? <span class="arr">+</span></div>
-      <div class="faq-a">Free tier: $0/month (Render free + Neon free + Upstash free, with the caveat that the web service sleeps after 15 min of inactivity). Small production: ~$15/month (DigitalOcean droplet + managed Redis + managed Postgres). Heavy workload: scales horizontally with your worker count.</div>
+      <div class="faq-q"><span data-i18n="faq.q6">What's the cost to run this in production?</span> <span class="arr">+</span></div>
+      <div class="faq-a" data-i18n="faq.a6">Free tier: $0/month (Render free + Neon free + Upstash free, with the caveat that the web service sleeps after 15 min of inactivity). Small production: ~$15/month (DigitalOcean droplet + managed Redis + managed Postgres). Heavy workload: scales horizontally with your worker count.</div>
     </div>
   </div>
 </section>
 
 <!-- ============================== FINAL CTA ============================== -->
 <div class="final-cta fade-in">
-  <h2>See it running. <span style="background: linear-gradient(135deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Right now.</span></h2>
-  <p>The dashboard is live. Schedule a cron job, pause a queue, watch metrics update in real time.</p>
+  <h2 data-i18n-html="finalCta.title">See it running. <span style="background: linear-gradient(135deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Right now.</span></h2>
+  <p data-i18n="finalCta.sub">The dashboard is live. Schedule a cron job, pause a queue, watch metrics update in real time.</p>
   <div class="hero-actions">
-    <a href="/dashboard" class="btn btn-primary">⚡ Open Live Dashboard</a>
-    <a href="https://github.com/KauaEngineer/queueos" target="_blank" class="btn btn-secondary">⭐ View on GitHub</a>
+    <a href="/dashboard" class="btn btn-primary" data-i18n="finalCta.cta1">⚡ Open Live Dashboard</a>
+    <a href="https://github.com/KauaEngineer/queueos" target="_blank" class="btn btn-secondary" data-i18n="finalCta.cta2">⭐ View on GitHub</a>
   </div>
 </div>
 
 <!-- ============================== FOOTER ============================== -->
 <footer>
   <div class="footer-links">
-    <a href="/dashboard">Dashboard</a>
+    <a href="/dashboard" data-i18n="footer.dashboard">Dashboard</a>
     <a href="https://github.com/KauaEngineer/queueos" target="_blank">GitHub</a>
-    <a href="/api/health">Health</a>
+    <a href="/api/health" data-i18n="footer.health">Health</a>
     <a href="/metrics">Metrics</a>
-    <a href="#stats">Performance</a>
+    <a href="#stats" data-i18n="footer.performance">Performance</a>
     <a href="#faq">FAQ</a>
   </div>
-  <div class="built">
+  <div class="built" data-i18n-html="footer.built">
     QueueOS v0.1 · MIT License · Built by <a href="https://github.com/KauaEngineer" target="_blank" style="color: var(--cyan);">@KauaEngineer</a>
   </div>
 </footer>
 
 <script>
+  // ============ I18N DICTIONARY ============
+  const I18N = {
+    en: {
+      'nav.performance': 'Performance',
+      'nav.howItWorks': 'How it works',
+      'nav.features': 'Features',
+      'nav.code': 'Code',
+      'nav.stack': 'Stack',
+      'nav.faq': 'FAQ',
+      'nav.cta': 'Open Dashboard →',
+
+      'hero.badge': 'Production-grade async job processing',
+      'hero.title': 'Offload heavy work.<br>Keep your API <span class="accent">blazing fast.</span>',
+      'hero.lead': 'QueueOS is a self-hosted job queue system built on <strong>Node.js</strong>, <strong>Redis</strong> and <strong>BullMQ</strong>. Process emails, PDFs, image pipelines and notifications outside the request/response cycle — with a real-time dashboard, multi-tenancy, cron scheduling and Prometheus metrics out of the box.',
+      'hero.cta1': '⚡ Open Live Dashboard',
+      'hero.cta2': '⭐ Star on GitHub',
+      'hero.metric.completed': 'Jobs Completed',
+      'hero.metric.success': 'Success Rate',
+      'hero.metric.avg': 'Avg Duration (ms)',
+      'hero.metric.queues': 'Active Queues',
+
+      'stats.eyebrow': '02 · By the numbers',
+      'stats.title': 'Benchmarked for <span class="accent">throughput</span> &amp; reliability',
+      'stats.sub': 'Tested on a single 8-vCPU server with 16GB RAM. Numbers scale linearly with worker replicas.',
+      'stats.throughput.label': 'Throughput',
+      'stats.throughput.desc': 'Average sustained job rate',
+      'stats.jobsDay.label': 'Jobs / Day',
+      'stats.jobsDay.desc': 'Production reference workload',
+      'stats.avg.label': 'Avg Duration',
+      'stats.avg.desc': 'Across all 4 queue types',
+      'stats.success.label': 'Success Rate',
+      'stats.success.desc': 'Auto-retry with exp. backoff',
+
+      'how.eyebrow': '03 · How it works',
+      'how.title': 'The classic <span class="accent">producer-consumer</span> pattern',
+      'how.sub': 'Your API enqueues jobs in Redis. Workers consume in parallel and persist results to PostgreSQL. The dashboard polls Redis stats every 2 seconds for live observability.',
+      'flow.producer.sub1': 'Your API / App',
+      'flow.broker.sub1': 'BullMQ Queues',
+      'flow.workers.sub1': 'x4 pools (10/3/6/15)',
+      'flow.workers.sub2': 'retry · backoff · progress',
+      'flow.postgres': 'POSTGRESQL · Audit log',
+      'flow.dashboard': 'DASHBOARD · /metrics',
+
+      'features.eyebrow': '04 · Features',
+      'features.title': 'Everything you need to run jobs in <span class="accent">production</span>',
+      'features.sub': 'Built-in retry policies, observability, multi-tenancy and deployment artifacts — no extra plugins required.',
+      'features.f1.title': '4 specialized queues',
+      'features.f1.desc': 'Dedicated pools for email, reports, image processing and notifications — each with its own concurrency, timeout and retry policy.',
+      'features.f2.title': 'Real-time dashboard',
+      'features.f2.desc': 'Live throughput charts, queue states, recent jobs and worker stats — refreshing every 2 seconds via Redis polling.',
+      'features.f3.title': 'Cron scheduling',
+      'features.f3.desc': 'Schedule recurring jobs with standard cron patterns directly from the dashboard UI. Powered by BullMQ repeat.',
+      'features.f4.title': 'Multi-tenant isolation',
+      'features.f4.desc': 'Per-tenant job tracking via the <code>X-Tenant-Id</code> header. Filter the dashboard and aggregate metrics by tenant.',
+      'features.f5.title': 'Webhook alerts',
+      'features.f5.desc': 'POST to Slack, Discord or any URL when 3+ jobs fail within 60 seconds. Built-in cooldown to prevent floods.',
+      'features.f6.title': 'Prometheus + Grafana',
+      'features.f6.desc': '<code>/metrics</code> endpoint in standard exposition format. K8s manifests with HPA scaling included.',
+      'features.f7.title': 'CSV export',
+      'features.f7.desc': 'Download up to 10k filtered job logs as CSV with one click — by queue, status or date range.',
+      'features.f8.title': 'Pause & resume',
+      'features.f8.desc': 'Pause any queue from the UI without dropping in-flight jobs. Perfect for maintenance windows.',
+      'features.f9.title': 'Container-ready',
+      'features.f9.desc': 'Multi-stage Dockerfile, docker-compose for dev, and Kubernetes manifests (HPA, PVC, healthchecks) for production.',
+
+      'useCases.eyebrow': '05 · Use cases',
+      'useCases.title': 'Built for <span class="accent">real-world</span> workloads',
+      'useCases.sub': 'Wherever you have heavy work outside the critical path, QueueOS fits in.',
+      'useCases.ecom.title': 'E-commerce',
+      'useCases.ecom.i1': 'Order confirmation emails',
+      'useCases.ecom.i2': 'Invoice PDF generation',
+      'useCases.ecom.i3': 'Inventory sync webhooks',
+      'useCases.ecom.i4': 'Shipping label rendering',
+      'useCases.email.title': 'Email marketing',
+      'useCases.email.i1': 'Newsletter blast (millions)',
+      'useCases.email.i2': 'Transactional drip campaigns',
+      'useCases.email.i3': 'Bounce/complaint handling',
+      'useCases.email.i4': 'Send-time optimization',
+      'useCases.saas.title': 'SaaS analytics',
+      'useCases.saas.i1': 'Monthly report generation',
+      'useCases.saas.i2': 'Daily aggregations',
+      'useCases.saas.i3': 'Data warehouse syncs',
+      'useCases.saas.i4': 'Customer usage rollups',
+      'useCases.media.title': 'Media platforms',
+      'useCases.media.i1': 'Image resize & WebP convert',
+      'useCases.media.i2': 'Video thumbnail extraction',
+      'useCases.media.i3': 'OCR on uploaded docs',
+      'useCases.media.i4': 'Watermark application',
+
+      'code.eyebrow': '06 · Developer experience',
+      'code.title': 'Strongly typed. <span class="accent">No surprises.</span>',
+      'code.sub': 'Every job is a TypeScript interface. IDE autocomplete and compile-time checks across producers and workers.',
+
+      'compare.eyebrow': '07 · Comparison',
+      'compare.title': 'Why not just use <span class="accent">serverless functions?</span>',
+      'compare.sub': 'Serverless excels at request-response. Long-running, retriable, observable jobs are a different beast.',
+      'compare.col.capability': 'Capability',
+      'compare.row1.label': 'Long-running jobs (> 60s)',
+      'compare.row1.queueos': '<span class="check">✓</span> Up to 120s default',
+      'compare.row1.vercel': '<span class="cross">✗</span> 10–60s only',
+      'compare.row1.sqs': '<span class="check">✓</span> Up to 15min',
+      'compare.row1.sidekiq': '<span class="check">✓</span> Unlimited',
+      'compare.row2.label': 'Real-time dashboard',
+      'compare.row2.queueos': '<span class="check">✓</span> Included',
+      'compare.row2.vercel': '<span class="cross">✗</span> Logs only',
+      'compare.row2.sqs': '<span class="cross">✗</span> CloudWatch DIY',
+      'compare.row2.sidekiq': '<span class="check">✓</span> Web UI',
+      'compare.row3.label': 'Retry with exponential backoff',
+      'compare.row3.queueos': '<span class="check">✓</span> Configurable',
+      'compare.row3.vercel': '<span class="cross">✗</span> Manual',
+      'compare.row3.sqs': '<span class="check">✓</span> DLQ + retries',
+      'compare.row3.sidekiq': '<span class="check">✓</span> Built-in',
+      'compare.row4.label': 'Multi-tenant isolation',
+      'compare.row4.queueos': '<span class="check">✓</span> Header-based',
+      'compare.row5.label': 'Self-hosted / no vendor lock',
+      'compare.row5.queueos': '<span class="check">✓</span> Docker + K8s',
+      'compare.row5.vercel': '<span class="cross">✗</span> Vercel only',
+      'compare.row5.sqs': '<span class="cross">✗</span> AWS only',
+      'compare.row6.label': 'Language',
+      'compare.row6.sqs': 'Any (Lambda)',
+      'compare.row7.label': 'Cost at scale',
+      'compare.row7.queueos': 'Fixed (your infra)',
+      'compare.row7.vercel': 'Pay per invocation',
+      'compare.row7.sqs': 'Pay per req + duration',
+      'compare.row7.sidekiq': 'Fixed (your infra)',
+
+      'arch.eyebrow': '08 · Architecture',
+      'arch.title': 'Three layers, <span class="accent">no magic</span>',
+      'arch.sub': 'Producer enqueues. Redis brokers. Workers consume. PostgreSQL persists results for audit.',
+      'arch.layer1.title': 'Producer Layer',
+      'arch.layer2.title': 'Broker Layer',
+      'arch.layer3.title': 'Consumer Layer',
+      'arch.l3.i1': '4 Worker pools',
+      'arch.l3.i3': 'Snapshots scheduler',
+
+      'stack.eyebrow': '09 · Tech stack',
+      'stack.title': 'Built on <span class="accent">battle-tested</span> tools',
+      'stack.sub': 'No experimental libraries. Every dependency has a multi-year track record in production.',
+      'stack.node': 'Non-blocking I/O runtime. Worker processes spawn via cluster.',
+      'stack.redis': 'In-memory broker. Queues stored as sorted sets & lists.',
+      'stack.bullmq': 'Queue library: retries, delays, priority, rate limit.',
+      'stack.ts': 'Strict typing across producers, jobs and workers.',
+      'stack.prisma': 'Type-safe ORM with migrations and seed.',
+      'stack.pg': 'Audit log, snapshots and tenant data.',
+      'stack.express': 'Minimal HTTP layer for dashboard API.',
+      'stack.docker': 'Multi-stage build. Manifests with HPA + PVC.',
+
+      'faq.eyebrow': '10 · FAQ',
+      'faq.title': 'Common <span class="accent">questions</span>',
+      'faq.sub': 'Some of what recruiters and engineers usually ask about this project.',
+      'faq.q1': 'Why BullMQ instead of plain Redis or RabbitMQ?',
+      'faq.a1': 'BullMQ gives us retries with exponential backoff, delayed jobs, priority lanes, rate limiting and a rich event API — for free, on top of Redis. RabbitMQ is great but adds operational overhead; here Redis doubles as cache + broker.',
+      'faq.q2': 'Why not just use serverless functions / Vercel Cron?',
+      'faq.a2': 'Serverless excels at request-response, but struggles with long-running jobs (>60s on most plans), real-time progress updates, observability and cost predictability. QueueOS workers run continuously and can process jobs of any duration with zero cold-start overhead.',
+      'faq.q3': 'Is this production-ready?',
+      'faq.a3': 'The architecture is — BullMQ + Redis is what powers job processing at Atlassian, Microsoft and thousands of startups. This specific implementation is a portfolio project; before shipping to production you\'d want test coverage, structured logging (pino), Sentry integration and stricter resource limits.',
+      'faq.q4': 'How does multi-tenancy work?',
+      'faq.a4': 'Every API request reads <code>X-Tenant-Id</code> from the headers (default: "default"). Jobs carry the tenant ID in their data, workers persist it to the audit log, and dashboard queries filter by tenant. Different tenants never see each other\'s data.',
+      'faq.q5': 'How do I deploy this?',
+      'faq.a5': 'Three options: <strong>docker compose up</strong> for local stack (Redis + Postgres + workers + dashboard); <strong>npm start</strong> on any Node host (Render, Railway, Fly.io) with managed Redis/Postgres; or <strong>kubectl apply -f k8s/</strong> on any Kubernetes cluster, with HPA auto-scaling workers based on queue depth.',
+      'faq.q6': 'What\'s the cost to run this in production?',
+      'faq.a6': 'Free tier: $0/month (Render free + Neon free + Upstash free, with the caveat that the web service sleeps after 15 min of inactivity). Small production: ~$15/month (DigitalOcean droplet + managed Redis + managed Postgres). Heavy workload: scales horizontally with your worker count.',
+
+      'finalCta.title': 'See it running. <span style="background: linear-gradient(135deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Right now.</span>',
+      'finalCta.sub': 'The dashboard is live. Schedule a cron job, pause a queue, watch metrics update in real time.',
+      'finalCta.cta1': '⚡ Open Live Dashboard',
+      'finalCta.cta2': '⭐ View on GitHub',
+
+      'footer.dashboard': 'Dashboard',
+      'footer.health': 'Health',
+      'footer.performance': 'Performance',
+      'footer.built': 'QueueOS v0.1 · MIT License · Built by <a href="https://github.com/KauaEngineer" target="_blank" style="color: var(--cyan);">@KauaEngineer</a>',
+    },
+    pt: {
+      'nav.performance': 'Performance',
+      'nav.howItWorks': 'Como funciona',
+      'nav.features': 'Recursos',
+      'nav.code': 'Código',
+      'nav.stack': 'Stack',
+      'nav.faq': 'FAQ',
+      'nav.cta': 'Abrir Dashboard →',
+
+      'hero.badge': 'Processamento de jobs assíncronos pronto pra produção',
+      'hero.title': 'Tire o trabalho pesado da frente.<br>Mantenha sua API <span class="accent">rápida como um foguete.</span>',
+      'hero.lead': 'QueueOS é um sistema de filas de jobs self-hosted construído em <strong>Node.js</strong>, <strong>Redis</strong> e <strong>BullMQ</strong>. Processe emails, PDFs, pipelines de imagem e notificações fora do ciclo request/response — com dashboard em tempo real, multi-tenant, agendamento via cron e métricas Prometheus prontos pra usar.',
+      'hero.cta1': '⚡ Abrir Dashboard ao Vivo',
+      'hero.cta2': '⭐ Star no GitHub',
+      'hero.metric.completed': 'Jobs Concluídos',
+      'hero.metric.success': 'Taxa de Sucesso',
+      'hero.metric.avg': 'Duração Média (ms)',
+      'hero.metric.queues': 'Filas Ativas',
+
+      'stats.eyebrow': '02 · Em números',
+      'stats.title': 'Otimizado para <span class="accent">throughput</span> e confiabilidade',
+      'stats.sub': 'Testado em um servidor único de 8 vCPUs com 16GB RAM. Os números escalam linearmente com as réplicas de workers.',
+      'stats.throughput.label': 'Throughput',
+      'stats.throughput.desc': 'Taxa média sustentada de jobs',
+      'stats.jobsDay.label': 'Jobs / Dia',
+      'stats.jobsDay.desc': 'Carga de produção de referência',
+      'stats.avg.label': 'Duração Média',
+      'stats.avg.desc': 'Considerando as 4 filas',
+      'stats.success.label': 'Taxa de Sucesso',
+      'stats.success.desc': 'Retry automático com backoff exp.',
+
+      'how.eyebrow': '03 · Como funciona',
+      'how.title': 'O clássico padrão <span class="accent">producer-consumer</span>',
+      'how.sub': 'Sua API enfileira jobs no Redis. Workers consomem em paralelo e persistem resultados no PostgreSQL. O dashboard faz polling das stats do Redis a cada 2 segundos pra observabilidade ao vivo.',
+      'flow.producer.sub1': 'Sua API / App',
+      'flow.broker.sub1': 'Filas BullMQ',
+      'flow.workers.sub1': 'x4 pools (10/3/6/15)',
+      'flow.workers.sub2': 'retry · backoff · progresso',
+      'flow.postgres': 'POSTGRESQL · Log de auditoria',
+      'flow.dashboard': 'DASHBOARD · /metrics',
+
+      'features.eyebrow': '04 · Recursos',
+      'features.title': 'Tudo que você precisa pra rodar jobs em <span class="accent">produção</span>',
+      'features.sub': 'Políticas de retry embutidas, observabilidade, multi-tenant e artefatos de deploy — sem plugins extras.',
+      'features.f1.title': '4 filas especializadas',
+      'features.f1.desc': 'Pools dedicados pra email, relatórios, processamento de imagens e notificações — cada um com sua própria concorrência, timeout e política de retry.',
+      'features.f2.title': 'Dashboard em tempo real',
+      'features.f2.desc': 'Gráficos de throughput ao vivo, estado das filas, jobs recentes e stats dos workers — atualizando a cada 2 segundos via polling no Redis.',
+      'features.f3.title': 'Agendamento via cron',
+      'features.f3.desc': 'Agende jobs recorrentes com padrões cron padrão direto pela UI do dashboard. Suportado pelo BullMQ repeat.',
+      'features.f4.title': 'Isolamento multi-tenant',
+      'features.f4.desc': 'Rastreamento de jobs por tenant via o header <code>X-Tenant-Id</code>. Filtre o dashboard e agregue métricas por tenant.',
+      'features.f5.title': 'Alertas via webhook',
+      'features.f5.desc': 'POST pro Slack, Discord ou qualquer URL quando 3+ jobs falharem em 60 segundos. Cooldown embutido pra evitar flood.',
+      'features.f6.title': 'Prometheus + Grafana',
+      'features.f6.desc': 'Endpoint <code>/metrics</code> em formato exposition padrão. Manifests K8s com HPA pra scaling incluídos.',
+      'features.f7.title': 'Exportação CSV',
+      'features.f7.desc': 'Baixe até 10k logs de jobs filtrados em CSV com um clique — por fila, status ou intervalo de data.',
+      'features.f8.title': 'Pause e resume',
+      'features.f8.desc': 'Pause qualquer fila pela UI sem descartar jobs em execução. Perfeito pra janelas de manutenção.',
+      'features.f9.title': 'Pronto pra container',
+      'features.f9.desc': 'Dockerfile multi-stage, docker-compose pra dev, e manifests Kubernetes (HPA, PVC, healthchecks) pra produção.',
+
+      'useCases.eyebrow': '05 · Casos de uso',
+      'useCases.title': 'Feito pra cargas de trabalho <span class="accent">do mundo real</span>',
+      'useCases.sub': 'Sempre que você tiver trabalho pesado fora do caminho crítico, o QueueOS encaixa.',
+      'useCases.ecom.title': 'E-commerce',
+      'useCases.ecom.i1': 'Emails de confirmação de pedido',
+      'useCases.ecom.i2': 'Geração de nota fiscal em PDF',
+      'useCases.ecom.i3': 'Webhooks de sincronização de estoque',
+      'useCases.ecom.i4': 'Renderização de etiqueta de envio',
+      'useCases.email.title': 'Email marketing',
+      'useCases.email.i1': 'Disparo de newsletter (milhões)',
+      'useCases.email.i2': 'Campanhas transacionais (drip)',
+      'useCases.email.i3': 'Tratamento de bounce/reclamação',
+      'useCases.email.i4': 'Otimização de horário de envio',
+      'useCases.saas.title': 'Analytics de SaaS',
+      'useCases.saas.i1': 'Geração de relatório mensal',
+      'useCases.saas.i2': 'Agregações diárias',
+      'useCases.saas.i3': 'Sync com data warehouse',
+      'useCases.saas.i4': 'Rollup de uso dos clientes',
+      'useCases.media.title': 'Plataformas de mídia',
+      'useCases.media.i1': 'Resize de imagem & conversão WebP',
+      'useCases.media.i2': 'Extração de thumbnail de vídeo',
+      'useCases.media.i3': 'OCR em documentos enviados',
+      'useCases.media.i4': 'Aplicação de watermark',
+
+      'code.eyebrow': '06 · Developer experience',
+      'code.title': 'Fortemente tipado. <span class="accent">Sem surpresas.</span>',
+      'code.sub': 'Cada job é uma interface TypeScript. Autocomplete na IDE e checagem em tempo de compilação entre producers e workers.',
+
+      'compare.eyebrow': '07 · Comparação',
+      'compare.title': 'Por que não usar só <span class="accent">serverless functions?</span>',
+      'compare.sub': 'Serverless brilha em request-response. Jobs longos, com retry e observáveis são outra história.',
+      'compare.col.capability': 'Capacidade',
+      'compare.row1.label': 'Jobs longos (> 60s)',
+      'compare.row1.queueos': '<span class="check">✓</span> Até 120s padrão',
+      'compare.row1.vercel': '<span class="cross">✗</span> Só 10–60s',
+      'compare.row1.sqs': '<span class="check">✓</span> Até 15min',
+      'compare.row1.sidekiq': '<span class="check">✓</span> Ilimitado',
+      'compare.row2.label': 'Dashboard em tempo real',
+      'compare.row2.queueos': '<span class="check">✓</span> Incluído',
+      'compare.row2.vercel': '<span class="cross">✗</span> Só logs',
+      'compare.row2.sqs': '<span class="cross">✗</span> CloudWatch (faça você)',
+      'compare.row2.sidekiq': '<span class="check">✓</span> Web UI',
+      'compare.row3.label': 'Retry com backoff exponencial',
+      'compare.row3.queueos': '<span class="check">✓</span> Configurável',
+      'compare.row3.vercel': '<span class="cross">✗</span> Manual',
+      'compare.row3.sqs': '<span class="check">✓</span> DLQ + retries',
+      'compare.row3.sidekiq': '<span class="check">✓</span> Embutido',
+      'compare.row4.label': 'Isolamento multi-tenant',
+      'compare.row4.queueos': '<span class="check">✓</span> Por header',
+      'compare.row5.label': 'Self-hosted / sem vendor lock-in',
+      'compare.row5.queueos': '<span class="check">✓</span> Docker + K8s',
+      'compare.row5.vercel': '<span class="cross">✗</span> Só Vercel',
+      'compare.row5.sqs': '<span class="cross">✗</span> Só AWS',
+      'compare.row6.label': 'Linguagem',
+      'compare.row6.sqs': 'Qualquer (Lambda)',
+      'compare.row7.label': 'Custo em escala',
+      'compare.row7.queueos': 'Fixo (sua infra)',
+      'compare.row7.vercel': 'Pago por invocação',
+      'compare.row7.sqs': 'Pago por req + duração',
+      'compare.row7.sidekiq': 'Fixo (sua infra)',
+
+      'arch.eyebrow': '08 · Arquitetura',
+      'arch.title': 'Três camadas, <span class="accent">sem mágica</span>',
+      'arch.sub': 'Producer enfileira. Redis intermedia. Workers consomem. PostgreSQL persiste pra auditoria.',
+      'arch.layer1.title': 'Camada Producer',
+      'arch.layer2.title': 'Camada Broker',
+      'arch.layer3.title': 'Camada Consumer',
+      'arch.l3.i1': '4 pools de workers',
+      'arch.l3.i3': 'Scheduler de snapshots',
+
+      'stack.eyebrow': '09 · Tech stack',
+      'stack.title': 'Construído com ferramentas <span class="accent">testadas em batalha</span>',
+      'stack.sub': 'Sem bibliotecas experimentais. Cada dependência tem anos de uso em produção.',
+      'stack.node': 'Runtime de I/O não bloqueante. Workers em processos separados via cluster.',
+      'stack.redis': 'Broker em memória. Filas armazenadas como sorted sets e lists.',
+      'stack.bullmq': 'Lib de filas: retries, delays, prioridade, rate limit.',
+      'stack.ts': 'Tipagem estrita entre producers, jobs e workers.',
+      'stack.prisma': 'ORM type-safe com migrations e seed.',
+      'stack.pg': 'Log de auditoria, snapshots e dados de tenant.',
+      'stack.express': 'Camada HTTP mínima pra API do dashboard.',
+      'stack.docker': 'Build multi-stage. Manifests com HPA + PVC.',
+
+      'faq.eyebrow': '10 · FAQ',
+      'faq.title': 'Perguntas <span class="accent">frequentes</span>',
+      'faq.sub': 'Algumas coisas que recrutadores e engenheiros costumam perguntar sobre este projeto.',
+      'faq.q1': 'Por que BullMQ em vez de Redis puro ou RabbitMQ?',
+      'faq.a1': 'O BullMQ entrega retries com backoff exponencial, jobs com delay, prioridade, rate limiting e uma API de eventos rica — de graça, por cima do Redis. RabbitMQ é ótimo, mas adiciona overhead operacional; aqui o Redis acumula as funções de cache + broker.',
+      'faq.q2': 'Por que não usar só serverless functions / Vercel Cron?',
+      'faq.a2': 'Serverless brilha em request-response, mas sofre com jobs longos (>60s na maioria dos planos), atualizações de progresso em tempo real, observabilidade e previsibilidade de custo. Os workers do QueueOS rodam continuamente e podem processar jobs de qualquer duração sem cold-start.',
+      'faq.q3': 'Isto está pronto pra produção?',
+      'faq.a3': 'A arquitetura sim — BullMQ + Redis é o que move o processamento de jobs na Atlassian, Microsoft e milhares de startups. Esta implementação específica é um projeto de portfólio; antes de mandar pra produção, vale adicionar cobertura de testes, logging estruturado (pino), integração com Sentry e limites de recurso mais rígidos.',
+      'faq.q4': 'Como funciona o multi-tenant?',
+      'faq.a4': 'Toda request da API lê <code>X-Tenant-Id</code> dos headers (default: "default"). Os jobs carregam o tenant ID nos dados, workers persistem no log de auditoria e queries do dashboard filtram por tenant. Tenants nunca veem dados uns dos outros.',
+      'faq.q5': 'Como faço o deploy disso?',
+      'faq.a5': 'Três opções: <strong>docker compose up</strong> pra stack local (Redis + Postgres + workers + dashboard); <strong>npm start</strong> em qualquer host Node (Render, Railway, Fly.io) com Redis/Postgres gerenciados; ou <strong>kubectl apply -f k8s/</strong> em qualquer cluster Kubernetes, com HPA auto-escalando workers conforme o tamanho da fila.',
+      'faq.q6': 'Qual o custo pra rodar em produção?',
+      'faq.a6': 'Free tier: $0/mês (Render free + Neon free + Upstash free, com o detalhe que o serviço web dorme após 15 min de inatividade). Produção pequena: ~$15/mês (droplet DigitalOcean + Redis e Postgres gerenciados). Carga pesada: escala horizontalmente com a quantidade de workers.',
+
+      'finalCta.title': 'Veja rodando. <span style="background: linear-gradient(135deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Agora mesmo.</span>',
+      'finalCta.sub': 'O dashboard está no ar. Agende um cron job, pause uma fila, veja as métricas atualizando em tempo real.',
+      'finalCta.cta1': '⚡ Abrir Dashboard ao Vivo',
+      'finalCta.cta2': '⭐ Ver no GitHub',
+
+      'footer.dashboard': 'Dashboard',
+      'footer.health': 'Health',
+      'footer.performance': 'Performance',
+      'footer.built': 'QueueOS v0.1 · Licença MIT · Feito por <a href="https://github.com/KauaEngineer" target="_blank" style="color: var(--cyan);">@KauaEngineer</a>',
+    }
+  };
+
   // ============ TYPEWRITER ============
-  const TW_TEXTS = [
-    'queue.add(\'send-email\', { to: user });',
-    'worker.process(async job => ...);',
-    'redis · bullmq · postgres · k8s',
-    'production-ready · self-hosted · free',
-  ];
-  let twIdx = 0, twChar = 0, twDel = false;
+  const TW = {
+    en: [
+      'queue.add(\'send-email\', { to: user });',
+      'worker.process(async job => ...);',
+      'redis · bullmq · postgres · k8s',
+      'production-ready · self-hosted · free',
+    ],
+    pt: [
+      'queue.add(\'send-email\', { to: usuario });',
+      'worker.process(async job => ...);',
+      'redis · bullmq · postgres · k8s',
+      'pronto-pra-prod · self-hosted · grátis',
+    ],
+  };
+  let twIdx = 0, twChar = 0, twDel = false, twLang = 'en';
   function typeLoop() {
     const el = document.getElementById('tw-text');
-    const cur = TW_TEXTS[twIdx];
+    const list = TW[twLang];
+    const cur = list[twIdx % list.length];
     if (!twDel) {
       twChar++;
       el.textContent = cur.slice(0, twChar);
@@ -1159,11 +1511,42 @@ GET   /api/health              <span class="com">// Liveness probe</span></pre><
     } else {
       twChar--;
       el.textContent = cur.slice(0, twChar);
-      if (twChar === 0) { twDel = false; twIdx = (twIdx + 1) % TW_TEXTS.length; }
+      if (twChar === 0) { twDel = false; twIdx++; }
     }
     setTimeout(typeLoop, twDel ? 25 : 55);
   }
   typeLoop();
+
+  // ============ I18N ENGINE ============
+  function setLang(lang) {
+    if (!I18N[lang]) lang = 'en';
+    document.documentElement.lang = lang;
+    localStorage.setItem('queueos:lang', lang);
+    const dict = I18N[lang];
+
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const k = el.dataset.i18n;
+      if (dict[k] !== undefined) el.textContent = dict[k];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach((el) => {
+      const k = el.dataset.i18nHtml;
+      if (dict[k] !== undefined) el.innerHTML = dict[k];
+    });
+
+    twLang = lang;
+
+    document.querySelectorAll('.lang-toggle button').forEach((b) => {
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+  }
+
+  const saved = localStorage.getItem('queueos:lang');
+  const navLang = (navigator.language || 'en').slice(0, 2).toLowerCase();
+  setLang(saved || (navLang === 'pt' ? 'pt' : 'en'));
+
+  document.querySelectorAll('.lang-toggle button').forEach((btn) => {
+    btn.addEventListener('click', () => setLang(btn.dataset.lang));
+  });
 
   // ============ COUNTER ANIMATION ============
   function animateCounter(el) {
@@ -1175,9 +1558,10 @@ GET   /api/health              <span class="com">// Liveness probe</span></pre><
       const t = Math.min(1, (now - start) / duration);
       const eased = 1 - Math.pow(1 - t, 3);
       const val = target * eased;
+      const locale = (document.documentElement.lang === 'pt') ? 'pt-BR' : 'en-US';
       el.textContent = decimals > 0
-        ? val.toFixed(decimals)
-        : Math.floor(val).toLocaleString('en-US');
+        ? val.toFixed(decimals).replace('.', locale === 'pt-BR' ? ',' : '.')
+        : Math.floor(val).toLocaleString(locale);
       if (t < 1) requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
@@ -1221,8 +1605,9 @@ GET   /api/health              <span class="com">// Liveness probe</span></pre><
       const r = await fetch('/api/metrics');
       if (!r.ok) return;
       const m = await r.json();
-      document.getElementById('live-completed').textContent = m.completed.toLocaleString('en-US');
-      document.getElementById('live-success').textContent = m.successRate.toFixed(1) + '%';
+      const locale = (document.documentElement.lang === 'pt') ? 'pt-BR' : 'en-US';
+      document.getElementById('live-completed').textContent = m.completed.toLocaleString(locale);
+      document.getElementById('live-success').textContent = m.successRate.toFixed(1).replace('.', locale === 'pt-BR' ? ',' : '.') + '%';
       document.getElementById('live-avg').textContent = m.avgDurationMs;
     } catch {
       document.getElementById('live-completed').textContent = '—';
